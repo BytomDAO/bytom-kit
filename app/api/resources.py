@@ -3,6 +3,7 @@ from flask_restful import reqparse
 from app.model.hello import get_hello_result
 from app.model.signature import sign
 from app.model.signature import verify
+from app.model.key import create_entropy
 
 parser = reqparse.RequestParser()
 parser.add_argument('private_key', type=str)
@@ -34,3 +35,9 @@ class Verify(Resource):
         message = args.get('message')
         result = verify(public_key, signature, message)
         return result
+
+class Create_Entropy(Resource):
+
+    def post(self):
+        entropy = create_entropy()
+        return entropy
