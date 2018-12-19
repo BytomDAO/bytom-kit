@@ -5,6 +5,7 @@ from app.model.signature import sign
 from app.model.signature import verify
 from app.model.key import create_entropy
 from app.model.key import entropy_to_mnemonic
+from app.model.key import mnemonic_to_seed
 
 parser = reqparse.RequestParser()
 parser.add_argument('private_key', type=str)
@@ -12,6 +13,7 @@ parser.add_argument('message', type=str)
 parser.add_argument('public_key', type=str)
 parser.add_argument('signature', type=str)
 parser.add_argument('entropy_str', type=str)
+parser.add_argument('mnemonic_str', type=str)
 
 class Hello(Resource):
 
@@ -50,3 +52,11 @@ class Entropy_To_Mnemonic(Resource):
         entropy_str = args.get('entropy_str')
         mnemonic_str = entropy_to_mnemonic(entropy_str)
         return mnemonic_str
+
+class Mnemonic_To_Seed(Resource):
+
+    def post(self):
+        args = parser.parse_args()
+        mnemonic_str = args.get('mnemonic_str')
+        seed_str = mnemonic_to_seed(mnemonic_str)
+        return seed_str
