@@ -13,6 +13,7 @@ def create_entropy():
 
 # entropy_to_mnemonic create mnemonic from 128 bits entropy(the entropy_str length is 32)
 # return 12 mnemonics
+# verify or get more test data, please ref: https://gist.github.com/zcc0721/63aeb5143807950f7b7051fadc08cef0
 # test data 1:
 #   entropy_str: 1db8b283eb4623e749732a341396e0c9
 #   mnemonic_str: buffalo sheriff path story giraffe victory chair grab cross original return napkin
