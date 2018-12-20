@@ -6,6 +6,7 @@ from app.model.signature import verify
 from app.model.key import create_entropy
 from app.model.key import entropy_to_mnemonic
 from app.model.key import mnemonic_to_seed
+from app.model.key import seed_to_root_xprv
 
 parser = reqparse.RequestParser()
 parser.add_argument('private_key', type=str)
@@ -14,6 +15,7 @@ parser.add_argument('public_key', type=str)
 parser.add_argument('signature', type=str)
 parser.add_argument('entropy_str', type=str)
 parser.add_argument('mnemonic_str', type=str)
+parser.add_argument('seed_str', type=str)
 
 class Hello(Resource):
 
@@ -60,3 +62,11 @@ class Mnemonic_To_Seed(Resource):
         mnemonic_str = args.get('mnemonic_str')
         seed_str = mnemonic_to_seed(mnemonic_str)
         return seed_str
+
+class Seed_To_Root_Xprv(Resource):
+
+    def post(self):
+        args = parser.parse_args()
+        seed_str = args.get('seed_str')
+        root_xprv_str = seed_to_root_xprv(seed_str)
+        return root_xprv_str
