@@ -2,6 +2,7 @@ import random
 import hashlib
 import pbkdf2
 import hmac
+import ed25519
 
 # create_key create 128 bits entropy
 def create_entropy():
@@ -102,3 +103,10 @@ def seed_to_root_xprv(seed_str):
     root_xprv_str = new_hc_str
 
     return root_xprv_str
+
+# def xprv_to_xpub(xprv_str):
+# private_key = ed25519.SigningKey(bytes.fromhex(xprv_str[:64]))
+# public_key = private_key.get_verifying_key().to_ascii(encoding='hex')
+# xpub_str = public_key.decode() + xprv_str[64:]
+#     return xpub_str
+

@@ -9,10 +9,10 @@ from app.model.key import mnemonic_to_seed
 from app.model.key import seed_to_root_xprv
 
 parser = reqparse.RequestParser()
-parser.add_argument('private_key', type=str)
-parser.add_argument('message', type=str)
-parser.add_argument('public_key', type=str)
-parser.add_argument('signature', type=str)
+parser.add_argument('private_key_str', type=str)
+parser.add_argument('message_str', type=str)
+parser.add_argument('public_key_str', type=str)
+parser.add_argument('signature_str', type=str)
 parser.add_argument('entropy_str', type=str)
 parser.add_argument('mnemonic_str', type=str)
 parser.add_argument('seed_str', type=str)
@@ -26,8 +26,8 @@ class Sign(Resource):
 
     def post(self):
         args = parser.parse_args()
-        private_key = args.get('private_key')
-        message = args.get('message')
+        private_key = args.get('private_key_str')
+        message = args.get('message_str')
         sig = sign(private_key, message)
         return sig
 
@@ -35,9 +35,9 @@ class Verify(Resource):
     
     def post(self):
         args = parser.parse_args()
-        public_key = args.get('public_key')
-        signature = args.get('signature')
-        message = args.get('message')
+        public_key = args.get('public_key_str')
+        signature = args.get('signature_str')
+        message = args.get('message_str')
         result = verify(public_key, signature, message)
         return result
 
