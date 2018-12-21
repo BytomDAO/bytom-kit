@@ -117,6 +117,7 @@ def seed_to_root_xprv(seed_str):
 # public_key = private_key.get_verifying_key().to_ascii(encoding='hex')
 # xpub_str = public_key.decode() + xprv_str[64:]
 #     return xpub_str
+##################################################
 
 # xprv_to_expanded_private_key create expanded private key from xprv
 # You can verify or get more test data from: https://gist.github.com/zcc0721/ef0bf2e69f5e92b29d716981f2a8fe7d
@@ -135,3 +136,7 @@ def xprv_to_expanded_private_key(xprv_str):
 
     return expanded_private_key_str
 
+def xpub_to_public_key(xpub_str):
+    public_key_str = xpub_str[:64]
+
+    return public_key_str

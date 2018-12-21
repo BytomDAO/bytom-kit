@@ -8,6 +8,7 @@ from app.model.key import entropy_to_mnemonic
 from app.model.key import mnemonic_to_seed
 from app.model.key import seed_to_root_xprv
 from app.model.key import xprv_to_expanded_private_key
+from app.model.key import xpub_to_public_key
 
 parser = reqparse.RequestParser()
 parser.add_argument('private_key_str', type=str)
@@ -18,6 +19,7 @@ parser.add_argument('entropy_str', type=str)
 parser.add_argument('mnemonic_str', type=str)
 parser.add_argument('seed_str', type=str)
 parser.add_argument('xprv_str', type=str)
+parser.add_argument('xpub_str', type=str)
 
 class Hello(Resource):
 
@@ -80,3 +82,11 @@ class Xprv_To_Expanded_Private_Key(Resource):
         xprv_str = args.get('xprv_str')
         expanded_private_key_str = xprv_to_expanded_private_key(xprv_str)
         return expanded_private_key_str
+
+class Xpub_To_Public_Key(Resource):
+
+    def post(self):
+        args = parser.parse_args()
+        xpub_str = args.get('xpub_str')
+        public_key_str = xpub_to_public_key(xpub_str)
+        return public_key_str
