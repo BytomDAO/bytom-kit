@@ -3,6 +3,7 @@ import hashlib
 import pbkdf2
 import hmac
 import ed25519
+from app.model.signature import *
 
 # create_key create 128 bits entropy
 def create_entropy():
@@ -127,7 +128,6 @@ def seed_to_root_xprv(seed_str):
 
 # def xprv_to_child_xprv(xprv_str, path_str):
 #     child_xprv_str = xprv_str
-
 #     return child_xprv_str
 
 # xprv_to_expanded_private_key create expanded private key from xprv
@@ -148,26 +148,49 @@ def xprv_to_expanded_private_key(xprv_str):
     return expanded_private_key_str
 
 
-# def xprv_sign(xprv_str, message_str):
-
-
-#     return signature_str
-
-
 # xpub_to_public_key create 32 bytes public key from xpub
 # xpub length is 64 bytes.
-# You can verify or get more test data from: 
+# You can verify or get more test data from: https://gist.github.com/zcc0721/9e10f2fa5bd0c8f33aa6dfc87f6aa856
 # test data 1:
 #   xpub_str: ecc2bbb6c0492873cdbc81edf56bd896d3b644047879840e357be735b7fa7b6f4af1be7b8d71cc649ac4ca3816f9ccaf11bf49f4effb845f3c19e16eaf8bfcda
 #   public_key_str: ecc2bbb6c0492873cdbc81edf56bd896d3b644047879840e357be735b7fa7b6f
 # test data 2:
-#   xprv_str: 406c82307bf7978d17f3ecfeea7705370e9faef2027affa86c8027c6e11a8a50e231e65bd97048850ae6c39d0f46b63ae70aa24f5aac7877727c430c2201e6d6
+#   xpub_str: 406c82307bf7978d17f3ecfeea7705370e9faef2027affa86c8027c6e11a8a50e231e65bd97048850ae6c39d0f46b63ae70aa24f5aac7877727c430c2201e6d6
 #   public_key_str: 406c82307bf7978d17f3ecfeea7705370e9faef2027affa86c8027c6e11a8a50
 # test data 3:
-#   xprv_str: b435f948bd3748ede8f9d6f59728d669939e79c6c885667a5c138e05bbabde1de0dcfcbe0c6112022fbbf0da522f4e224a9c2381016380688b51886248b3156f
+#   xpub_str: b435f948bd3748ede8f9d6f59728d669939e79c6c885667a5c138e05bbabde1de0dcfcbe0c6112022fbbf0da522f4e224a9c2381016380688b51886248b3156f
 #   public_key_str: b435f948bd3748ede8f9d6f59728d669939e79c6c885667a5c138e05bbabde1d
 def xpub_to_public_key(xpub_str):
     public_key_str = xpub_str[:64]
 
     return public_key_str
 
+
+# def xprv_sign(xprv_str, message_str):
+    
+
+# xpub_verify verify signature
+# xpub_str length is 64 bytes.
+# message_str length is variable.
+# signature_str length is 64 bytes.
+# You can verify or get more test data from: https://gist.github.com/zcc0721/61a26c811a632623678e274cc7e5c10b
+# test data 1:
+#   xprv_str: c003f4bcccf9ad6f05ad2c84fa5ff98430eb8e73de5de232bc29334c7d074759d513bc370335cac51d77f0be5dfe84de024cfee562530b4d873b5f5e2ff4f57c
+#   xpub_str: 1b0541a7664cee929edb54d9ef21996b90546918a920a77e1cd6015d97c56563d513bc370335cac51d77f0be5dfe84de024cfee562530b4d873b5f5e2ff4f57c
+#   message_str: a6ce34eec332b32e42ef3407e052d64ac625da6f
+#   signature_str: f02f5bb22d8b32f14e88059a786379c26256892f45cf64770c844d0c5de2e52c00307b7bb25fcbb18be13c339a2f511a7c015a8cf81ac681052efe8e50eff00e
+# test data 2:
+#   xprv_str: 008ce51e3b52ee03eb0ad96c55eb5c9fe8736410518b585a0b7f35b2ab48d24c166364ce19322721b7dec84442c3665d97d0e995ba4d01c0f4b19b841379ac90
+#   xpub_str: ead6415a077b91aa7de32e1cf63350f9351d0298f5accc2cf92ef9429bd1f86c166364ce19322721b7dec84442c3665d97d0e995ba4d01c0f4b19b841379ac90
+#   message_str: 68656c6c6f206279746f6d      # value is: 'hello bytom'
+#   signature_str: 1cc6b0f4031352ffd7a62540f13edddaaebf2df05db7a4926df5513129a8e85dcff1324545a024b16f958239ea67840ced3c2d57bb468dbf0e6cf1d1075f0b0f
+# test data 3:
+#   xprv_str: 88c0c40fb54ef9c1b90af8cce8dc4c9d54f915074dde93f79ab61cedae03444101ff37ac4a07869214c2735bba0175e001abe608db18538e083e1e44430a273b
+#   xpub_str: cb22ce197d342d6bb440b0bf13ddd674f367275d28a00f893d7f0b10817690fd01ff37ac4a07869214c2735bba0175e001abe608db18538e083e1e44430a273b
+#   message_str: 1246b84985e1ab5f83f4ec2bdf271114666fd3d9e24d12981a3c861b9ed523c6
+#   signature_str: ab18f49b23d03295bc2a3f2a7d5bb53a2997bed733e1fc408b50ec834ae7e43f7da40fe5d9d50f6ef2d188e1d27f976aa2586cef1ba00dd098b5c9effa046306
+def xpub_verify(xpub_str, message_str, signature_str):
+    result = False
+    result = verify(xpub_to_public_key(xpub_str), signature_str, message_str)
+
+    return result

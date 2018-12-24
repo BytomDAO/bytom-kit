@@ -9,6 +9,7 @@ from app.model.key import mnemonic_to_seed
 from app.model.key import seed_to_root_xprv
 from app.model.key import xprv_to_expanded_private_key
 from app.model.key import xpub_to_public_key
+from app.model.key import xpub_verify
 
 parser = reqparse.RequestParser()
 parser.add_argument('private_key_str', type=str)
@@ -90,3 +91,13 @@ class Xpub_To_Public_Key(Resource):
         xpub_str = args.get('xpub_str')
         public_key_str = xpub_to_public_key(xpub_str)
         return public_key_str
+
+class Xpub_Verify(Resource):
+
+    def post(self):
+        args = parser.parse_args()
+        xpub = args.get('xpub_str')
+        message = args.get('message_str')
+        signature = args.get('signature_str')
+        result = xpub_verify(xpub, message, signature)
+        return result

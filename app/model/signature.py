@@ -16,13 +16,13 @@ import ed25519
 #   public_key_str: 026b5e22e282d07051203fb0596be140cf17f2532a31407f3b177faa74237cbe
 #   message_str: 48ec69c784c519b65d0e52badda3b7c25113a6b53b4c8e582abee3e2f9aab41514f15bd44c999f3d2ddae4bbab15baf9f4d82dde4f97aa5042cbcfdd8271530e
 #   signature_str: 691fe6fc51603adbac0db2f71f383e7039b6a031a2242da8fd6203f9c71e3b526d0cdace626811ee06797de21afebe54d0293027eb6b22b10c63d4dd0ab8790c
-
 def sign(private_key_str, message_str):
     signing_key = ed25519.SigningKey(bytes.fromhex(private_key_str))
     # signature = signing_key.sign(message_str.encode(), encoding='hex')
     signature = signing_key.sign(bytes.fromhex(message_str), encoding='hex')
 
     return signature.decode()
+
 
 def verify(public_key_str, signature_str, message_str):
     result = False
