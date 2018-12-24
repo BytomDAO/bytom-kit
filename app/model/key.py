@@ -124,6 +124,12 @@ def seed_to_root_xprv(seed_str):
 #     return xpub_str
 ##################################################
 
+
+# def xprv_to_child_xprv(xprv_str, path_str):
+#     child_xprv_str = xprv_str
+
+#     return child_xprv_str
+
 # xprv_to_expanded_private_key create expanded private key from xprv
 # You can verify or get more test data from: https://gist.github.com/zcc0721/ef0bf2e69f5e92b29d716981f2a8fe7d
 # test data 1:
@@ -140,6 +146,12 @@ def xprv_to_expanded_private_key(xprv_str):
     expanded_private_key_str = xprv_str[:64] + hc_str[64:]
 
     return expanded_private_key_str
+
+
+# def xprv_sign(xprv_str, message_str):
+
+
+#     return signature_str
 
 
 # xpub_to_public_key create 32 bytes public key from xpub
@@ -159,7 +171,3 @@ def xpub_to_public_key(xpub_str):
 
     return public_key_str
 
-
-# def xprv_sign(xprv_str, message_str):
-    
-#     return signature_str
