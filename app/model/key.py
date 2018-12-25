@@ -116,14 +116,34 @@ def seed_to_root_xprv(seed_str):
 
     return root_xprv_str
 
+# # private_key_str: c003f4bcccf9ad6f05ad2c84fa5ff98430eb8e73de5de232bc29334c7d074759
+# # publick_key_str: 1b0541a7664cee929edb54d9ef21996b90546918a920a77e1cd6015d97c56563
+# def private_key_to_public_key(private_key_str):
+# private_key = ed25519.SigningKey(bytes.fromhex(private_key_str))
+# public_key_str = private_key.get_verifying_key().to_ascii(encoding='hex').decode()
 
-##################################################
-# def xprv_to_xpub(xprv_str):
-# private_key = ed25519.SigningKey(bytes.fromhex(xprv_str[:64]))
-# public_key = private_key.get_verifying_key().to_ascii(encoding='hex')
-# xpub_str = public_key.decode() + xprv_str[64:]
-#     return xpub_str
-##################################################
+############# ERR!!!!!!!!!########################
+############# ERR!!!!!!!!!########################
+############# ERR!!!!!!!!!########################
+############# ERR!!!!!!!!!########################
+# xprv_to_xpub derives new xpub from xprv
+# xprv length is 64 bytes.
+# xpub length is 64 bytes.
+# You can verify or get more test data from: https://gist.github.com/zcc0721/d872a219fa91621d60357278bc62a512
+# test data 1:
+#   xprv_str: c003f4bcccf9ad6f05ad2c84fa5ff98430eb8e73de5de232bc29334c7d074759d513bc370335cac51d77f0be5dfe84de024cfee562530b4d873b5f5e2ff4f57c
+#   xpub_str: 1b0541a7664cee929edb54d9ef21996b90546918a920a77e1cd6015d97c56563d513bc370335cac51d77f0be5dfe84de024cfee562530b4d873b5f5e2ff4f57c
+# test data 2:
+#   xprv_str: 4dff4ea340f0a823f15d3f4f01ab62eae0e5da579ccb851f8db9dfe84c58b2b37b89903a740e1ee172da793a6e79d560e5f7f9bd058a12a280433ed6fa46510a
+#   xpub_str: bf852a7c36fe9c90c5fd2066c0407148f6e9ccf16324eb9f5cc01d9a2afe28957b89903a740e1ee172da793a6e79d560e5f7f9bd058a12a280433ed6fa46510a
+# test data 3:
+#   xprv_str: 74a49c698dbd3c12e36b0b287447d833f74f3937ff132ebff7054baa18623c35a705bb18b82e2ac0384b5127db97016e63609f712bc90e3506cfbea97599f46f
+#   xpub_str: 522940d6440fdc45363df2097e9cac29a9a8a33ac339f8b7cff848c199db5a1ca705bb18b82e2ac0384b5127db97016e63609f712bc90e3506cfbea97599f46f
+def xprv_to_xpub(xprv_str):
+    private_key = ed25519.SigningKey(bytes.fromhex(xprv_str[:64]))
+    public_key = private_key.get_verifying_key().to_ascii(encoding='hex')
+    xpub_str = public_key.decode() + xprv_str[64:]
+    return xpub_str
 
 
 # def xprv_to_child_xprv(xprv_str, path_str):
@@ -166,10 +186,14 @@ def xpub_to_public_key(xpub_str):
     return public_key_str
 
 
-# def xprv_sign(xprv_str, message_str):
-#     expanded_private_key = xprv_to_expanded_private_key(xprv_str)
-
-#     return signature_str
+# some err occur
+# some err occur
+# some err occur
+# some err occur
+def xprv_sign(xprv_str, message_str):
+    # expanded_private_key = xprv_to_expanded_private_key(xprv_str)
+    signature_str = sign(xprv_str[:64], message_str)
+    return signature_str
     
 
 # xpub_verify verify signature

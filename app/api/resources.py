@@ -10,6 +10,7 @@ from app.model.key import seed_to_root_xprv
 from app.model.key import xprv_to_expanded_private_key
 from app.model.key import xpub_to_public_key
 from app.model.key import xpub_verify
+from app.model.key import xprv_sign
 
 parser = reqparse.RequestParser()
 parser.add_argument('private_key_str', type=str)
@@ -101,3 +102,12 @@ class Xpub_Verify(Resource):
         signature = args.get('signature_str')
         result = xpub_verify(xpub, message, signature)
         return result
+
+class Xprv_Sign(Resource):
+
+    def post(self):
+        args = parser.parse_args()
+        xprv = args.get('xprv_str')
+        message = args.get('message_str')
+        signature = xprv_sign(xprv, message)
+        return signature
