@@ -4,6 +4,7 @@ import pbkdf2
 import hmac
 import ed25519
 from app.model.signature import *
+from app.model.edwards25519 import *
 
 # create_key create 128 bits entropy
 def create_entropy():
@@ -149,6 +150,8 @@ def xprv_to_xpub(xprv_str):
 # def xprv_to_child_xprv(xprv_str, path_str):
 #     child_xprv_str = xprv_str
 #     return child_xprv_str
+
+
 
 # xprv_to_expanded_private_key create expanded private key from xprv
 # You can verify or get more test data from: https://gist.github.com/zcc0721/ef0bf2e69f5e92b29d716981f2a8fe7d
