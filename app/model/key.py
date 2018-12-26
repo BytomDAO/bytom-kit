@@ -123,27 +123,30 @@ def seed_to_root_xprv(seed_str):
 # private_key = ed25519.SigningKey(bytes.fromhex(private_key_str))
 # public_key_str = private_key.get_verifying_key().to_ascii(encoding='hex').decode()
 
-############# ERR!!!!!!!!!########################
-############# ERR!!!!!!!!!########################
-############# ERR!!!!!!!!!########################
-############# ERR!!!!!!!!!########################
+
 # xprv_to_xpub derives new xpub from xprv
 # xprv length is 64 bytes.
 # xpub length is 64 bytes.
 # You can verify or get more test data from: https://gist.github.com/zcc0721/d872a219fa91621d60357278bc62a512
+# PLEASE ATTENTION: 
+# xprv_bytes = bytes.fromhex(xprv_str)
+# xprv_bytes[31] <= 127
+# This is the precondition. Please ref: https://github.com/bytom/bytom/blob/dev/crypto/ed25519/internal/edwards25519/edwards25519.go#L958-L963
 # test data 1:
 #   xprv_str: c003f4bcccf9ad6f05ad2c84fa5ff98430eb8e73de5de232bc29334c7d074759d513bc370335cac51d77f0be5dfe84de024cfee562530b4d873b5f5e2ff4f57c
 #   xpub_str: 1b0541a7664cee929edb54d9ef21996b90546918a920a77e1cd6015d97c56563d513bc370335cac51d77f0be5dfe84de024cfee562530b4d873b5f5e2ff4f57c
 # test data 2:
-#   xprv_str: 4dff4ea340f0a823f15d3f4f01ab62eae0e5da579ccb851f8db9dfe84c58b2b37b89903a740e1ee172da793a6e79d560e5f7f9bd058a12a280433ed6fa46510a
-#   xpub_str: bf852a7c36fe9c90c5fd2066c0407148f6e9ccf16324eb9f5cc01d9a2afe28957b89903a740e1ee172da793a6e79d560e5f7f9bd058a12a280433ed6fa46510a
+#   xprv_str: 36667587de27eec684fc4b222276f22a24d9a82e947ee0119148bedd4dec461dd4e1b1d95dfb0f78896677ea1026af7510b41fabd3bd5771311c0cb6968337b2
+#   xpub_str: ef0b3a8b0d66523d88f214900101ddb08a2a2a6db28bd8002e5995c1f1cbbc4cd4e1b1d95dfb0f78896677ea1026af7510b41fabd3bd5771311c0cb6968337b2
 # test data 3:
 #   xprv_str: 74a49c698dbd3c12e36b0b287447d833f74f3937ff132ebff7054baa18623c35a705bb18b82e2ac0384b5127db97016e63609f712bc90e3506cfbea97599f46f
 #   xpub_str: 522940d6440fdc45363df2097e9cac29a9a8a33ac339f8b7cff848c199db5a1ca705bb18b82e2ac0384b5127db97016e63609f712bc90e3506cfbea97599f46f
 def xprv_to_xpub(xprv_str):
-    private_key = ed25519.SigningKey(bytes.fromhex(xprv_str[:64]))
-    public_key = private_key.get_verifying_key().to_ascii(encoding='hex')
-    xpub_str = public_key.decode() + xprv_str[64:]
+    xprv_bytes = bytes.fromhex(xprv_str)
+    scalar = decodeint(xprv_bytes[:len(xprv_bytes)//2])
+    buf = encodepoint(scalarmultbase(scalar))
+    xpub = buf + xprv_bytes[len(xprv_bytes)//2:]
+    xpub_str = xpub.hex()
     return xpub_str
 
 
