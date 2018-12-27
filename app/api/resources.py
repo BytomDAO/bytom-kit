@@ -12,6 +12,7 @@ from app.model.key import xpub_to_public_key
 from app.model.key import xpub_verify
 from app.model.key import xprv_sign
 from app.model.key import xprv_to_xpub
+from app.model.key import xprv_sign
 
 parser = reqparse.RequestParser()
 parser.add_argument('private_key_str', type=str)

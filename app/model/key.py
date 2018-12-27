@@ -5,6 +5,7 @@ import hmac
 import ed25519
 from app.model.signature import *
 from app.model.edwards25519 import *
+from app.model.utils import *
 
 # create_key create 128 bits entropy
 def create_entropy():
@@ -20,7 +21,7 @@ def create_entropy():
 
 # entropy_to_mnemonic create mnemonic from 128 bits entropy(the entropy_str length is 32)
 # return 12 mnemonics
-# verify or get more test data, please ref: https://gist.github.com/zcc0721/63aeb5143807950f7b7051fadc08cef0
+# You can get more test data from: https://gist.github.com/zcc0721/63aeb5143807950f7b7051fadc08cef0
 # test data 1:
 #   entropy_str: 1db8b283eb4623e749732a341396e0c9
 #   mnemonic_str: buffalo sheriff path story giraffe victory chair grab cross original return napkin
@@ -63,7 +64,7 @@ def entropy_to_mnemonic(entropy_str):
 
 # mnemonic_to_seed create seed from mnemonic
 # You can find more details from: https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki#from-mnemonic-to-seed
-# You can verify or get more test data from: https://gist.github.com/zcc0721/4918e891073a9ca6c444ec7490298e82
+# You can get more test data from: https://gist.github.com/zcc0721/4918e891073a9ca6c444ec7490298e82
 # test data 1:
 #   mnemonic_str: ancient young hurt bone shuffle deposit congress normal crack six boost despair
 #   seed_str: afa3a86bbec2f40bb32833fc6324593824c4fc7821ed32eac1f762b5893e56745f66a6c6f2588b3d627680aa4e0e50efd25065097b3daa8c6a19d606838fe7d4
@@ -101,7 +102,7 @@ def prune_root_scalar(s_str):
 # seed_to_root_xprv create rootxprv from seed
 # seed_str length is 512 bits.
 # root_xprv length is 512 bits.
-# You can verify or get more test data from: https://gist.github.com/zcc0721/0aa1b971f4bf93d8f67e25f57b8b97ee
+# You can get more test data from: https://gist.github.com/zcc0721/0aa1b971f4bf93d8f67e25f57b8b97ee
 # test data 1:
 #   seed_str: afa3a86bbec2f40bb32833fc6324593824c4fc7821ed32eac1f762b5893e56745f66a6c6f2588b3d627680aa4e0e50efd25065097b3daa8c6a19d606838fe7d4
 #   root_xprv_str: 302a25c7c0a68a83fa043f594a2db8b44bc871fced553a8a33144b31bc7fb84887c9e75915bb6ba3fd0b9f94a60b7a5897ab9db6a48f888c2559132dba9152b0
@@ -117,17 +118,11 @@ def seed_to_root_xprv(seed_str):
 
     return root_xprv_str
 
-# # private_key_str: c003f4bcccf9ad6f05ad2c84fa5ff98430eb8e73de5de232bc29334c7d074759
-# # publick_key_str: 1b0541a7664cee929edb54d9ef21996b90546918a920a77e1cd6015d97c56563
-# def private_key_to_public_key(private_key_str):
-# private_key = ed25519.SigningKey(bytes.fromhex(private_key_str))
-# public_key_str = private_key.get_verifying_key().to_ascii(encoding='hex').decode()
-
 
 # xprv_to_xpub derives new xpub from xprv
 # xprv length is 64 bytes.
 # xpub length is 64 bytes.
-# You can verify or get more test data from: https://gist.github.com/zcc0721/d872a219fa91621d60357278bc62a512
+# You can get more test data from: https://gist.github.com/zcc0721/d872a219fa91621d60357278bc62a512
 # PLEASE ATTENTION: 
 # xprv_bytes = bytes.fromhex(xprv_str)
 # xprv_bytes[31] <= 127
@@ -157,7 +152,7 @@ def xprv_to_xpub(xprv_str):
 
 
 # xprv_to_expanded_private_key create expanded private key from xprv
-# You can verify or get more test data from: https://gist.github.com/zcc0721/ef0bf2e69f5e92b29d716981f2a8fe7d
+# You can get more test data from: https://gist.github.com/zcc0721/ef0bf2e69f5e92b29d716981f2a8fe7d
 # test data 1:
 #   xprv_str: 406c82307bf7978d17f3ecfeea7705370e9faef2027affa86c8027c6e11a8a50e231e65bd97048850ae6c39d0f46b63ae70aa24f5aac7877727c430c2201e6d6
 #   expanded_private_key_str_xprv: 406c82307bf7978d17f3ecfeea7705370e9faef2027affa86c8027c6e11a8a50d828bf44b1a109c2bbb4c72685858e2f2ab8b405beef1e4ecc12d1ed8511e8eb
@@ -176,7 +171,7 @@ def xprv_to_expanded_private_key(xprv_str):
 
 # xpub_to_public_key create 32 bytes public key from xpub
 # xpub length is 64 bytes.
-# You can verify or get more test data from: https://gist.github.com/zcc0721/9e10f2fa5bd0c8f33aa6dfc87f6aa856
+# You can get more test data from: https://gist.github.com/zcc0721/9e10f2fa5bd0c8f33aa6dfc87f6aa856
 # test data 1:
 #   xpub_str: ecc2bbb6c0492873cdbc81edf56bd896d3b644047879840e357be735b7fa7b6f4af1be7b8d71cc649ac4ca3816f9ccaf11bf49f4effb845f3c19e16eaf8bfcda
 #   public_key_str: ecc2bbb6c0492873cdbc81edf56bd896d3b644047879840e357be735b7fa7b6f
@@ -192,21 +187,63 @@ def xpub_to_public_key(xpub_str):
     return public_key_str
 
 
-# some err occur
-# some err occur
-# some err occur
-# some err occur
+# xprv_sign sign message
+# xprv_str length is 64 bytes.
+# message_str length is variable.
+# signature_str length is 64 bytes.
+# You can get more test data from: https://gist.github.com/zcc0721/61a26c811a632623678e274cc7e5c10b
+# test data 1:
+#   xprv_str: c003f4bcccf9ad6f05ad2c84fa5ff98430eb8e73de5de232bc29334c7d074759d513bc370335cac51d77f0be5dfe84de024cfee562530b4d873b5f5e2ff4f57c
+#   xpub_str: 1b0541a7664cee929edb54d9ef21996b90546918a920a77e1cd6015d97c56563d513bc370335cac51d77f0be5dfe84de024cfee562530b4d873b5f5e2ff4f57c
+#   message_str: a6ce34eec332b32e42ef3407e052d64ac625da6f
+#   signature_str: f02f5bb22d8b32f14e88059a786379c26256892f45cf64770c844d0c5de2e52c00307b7bb25fcbb18be13c339a2f511a7c015a8cf81ac681052efe8e50eff00e
+# test data 2:
+#   xprv_str: 008ce51e3b52ee03eb0ad96c55eb5c9fe8736410518b585a0b7f35b2ab48d24c166364ce19322721b7dec84442c3665d97d0e995ba4d01c0f4b19b841379ac90
+#   xpub_str: ead6415a077b91aa7de32e1cf63350f9351d0298f5accc2cf92ef9429bd1f86c166364ce19322721b7dec84442c3665d97d0e995ba4d01c0f4b19b841379ac90
+#   message_str: 68656c6c6f206279746f6d      # value is: 'hello bytom'
+#   signature_str: 1cc6b0f4031352ffd7a62540f13edddaaebf2df05db7a4926df5513129a8e85dcff1324545a024b16f958239ea67840ced3c2d57bb468dbf0e6cf1d1075f0b0f
+# test data 3:
+#   xprv_str: 88c0c40fb54ef9c1b90af8cce8dc4c9d54f915074dde93f79ab61cedae03444101ff37ac4a07869214c2735bba0175e001abe608db18538e083e1e44430a273b
+#   xpub_str: cb22ce197d342d6bb440b0bf13ddd674f367275d28a00f893d7f0b10817690fd01ff37ac4a07869214c2735bba0175e001abe608db18538e083e1e44430a273b
+#   message_str: 1246b84985e1ab5f83f4ec2bdf271114666fd3d9e24d12981a3c861b9ed523c6
+#   signature_str: ab18f49b23d03295bc2a3f2a7d5bb53a2997bed733e1fc408b50ec834ae7e43f7da40fe5d9d50f6ef2d188e1d27f976aa2586cef1ba00dd098b5c9effa046306
 def xprv_sign(xprv_str, message_str):
-    # expanded_private_key = xprv_to_expanded_private_key(xprv_str)
-    signature_str = sign(xprv_str[:64], message_str)
+    xprv_str = xprv_to_expanded_private_key(xprv_str)
+    xprv_bytes = bytes.fromhex(xprv_str)
+    message_bytes = bytes.fromhex(message_str)
+    data_bytes = xprv_bytes[32:64] + message_bytes
+
+    message_digest = hashlib.sha512(data_bytes).digest()
+    message_digest = sc_reduce32(message_digest.hex().encode())
+    message_digest = bytes.fromhex(message_digest.decode())
+    message_digest_reduced = message_digest[0:32]
+
+    scalar = decodeint(message_digest_reduced)
+    encoded_r = encodepoint(scalarmultbase(scalar))
+    xpub_str = xprv_to_xpub(xprv_str)
+    xpub_bytes = bytes.fromhex(xpub_str)
+    hram_digest_data = encoded_r + xpub_bytes[:32] + message_bytes
+
+    hram_digest = hashlib.sha512(hram_digest_data).digest()
+    hram_digest = sc_reduce32(hram_digest.hex().encode())
+    hram_digest = bytes.fromhex(hram_digest.decode())
+    hram_digest_reduced = hram_digest[0:32]
+
+    sk = xprv_bytes[:32]
+    s = sc_muladd(hram_digest_reduced.hex().encode(), sk.hex().encode(), message_digest_reduced.hex().encode())
+    s = bytes.fromhex(s.decode())
+
+    signature_bytes = encoded_r + s
+    signature_str = signature_bytes.hex()
+
     return signature_str
-    
+
 
 # xpub_verify verify signature
 # xpub_str length is 64 bytes.
 # message_str length is variable.
 # signature_str length is 64 bytes.
-# You can verify or get more test data from: https://gist.github.com/zcc0721/61a26c811a632623678e274cc7e5c10b
+# You can get more test data from: https://gist.github.com/zcc0721/61a26c811a632623678e274cc7e5c10b
 # test data 1:
 #   xprv_str: c003f4bcccf9ad6f05ad2c84fa5ff98430eb8e73de5de232bc29334c7d074759d513bc370335cac51d77f0be5dfe84de024cfee562530b4d873b5f5e2ff4f57c
 #   xpub_str: 1b0541a7664cee929edb54d9ef21996b90546918a920a77e1cd6015d97c56563d513bc370335cac51d77f0be5dfe84de024cfee562530b4d873b5f5e2ff4f57c
