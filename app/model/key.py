@@ -145,12 +145,6 @@ def xprv_to_xpub(xprv_str):
     return xpub_str
 
 
-# def xprv_to_child_xprv(xprv_str, path_str):
-#     child_xprv_str = xprv_str
-#     return child_xprv_str
-
-
-
 # xprv_to_expanded_private_key create expanded private key from xprv
 # You can get more test data from: https://gist.github.com/zcc0721/ef0bf2e69f5e92b29d716981f2a8fe7d
 # test data 1:
@@ -185,6 +179,70 @@ def xpub_to_public_key(xpub_str):
     public_key_str = xpub_str[:64]
 
     return public_key_str
+
+
+def prune_intermediate_scalar(f):
+    f = bytearray(f)
+    f[0] = f[0] & 248       # clear bottom 3 bits
+    f[29] = f[29] & 1       # clear 7 high bits
+    f[30] = 0               # clear 8 bits
+    f[31] = 0               # clear 8 bits
+    return f
+
+
+# xprv_to_child_xprv create new xprv through the path
+# xprv_str length is 64 bytes.
+# path_list item is hex string.
+# child_xprv length is 64 bytes.
+# You can get more test data from: https://gist.github.com/zcc0721/3377f520954db38070e8e9c80d3a5bfd
+# test data 1:
+#   xprv_str: 10fdbc41a4d3b8e5a0f50dd3905c1660e7476d4db3dbd9454fa4347500a633531c487e8174ffc0cfa76c3be6833111a9b8cd94446e37a76ee18bb21a7d6ea66b
+#   path_list: 010400000000000000
+#   path_list: 0100000000000000
+#   child_xprv_str: 0813a3abf814e4b4064b9b0492071176d8d98652081aced6fefe2b7363a83353f960274ff5ef195599a765e7bc24eddc2a1e6c73da0e6e0a4b47e65338bea9a6
+# test data 2:
+#   xprv_str: c003f4bcccf9ad6f05ad2c84fa5ff98430eb8e73de5de232bc29334c7d074759d513bc370335cac51d77f0be5dfe84de024cfee562530b4d873b5f5e2ff4f57c
+#   path_list: 00
+#   path_list: 00
+#   child_xprv_str: b885ac5535c35ae45b51a84b1190f7c31b21acff552c7680413905a9c6084759e9a8f3578fe2973e37d96bad45e8d9255f3b82019f326550d24374aeafece958
+# test data 3:
+#   xprv_str: 0031615bdf7906a19360f08029354d12eaaedc9046806aefd672e3b93b024e495a95ba63cf47903eb742cd1843a5252118f24c0c496e9213bd42de70f649a798
+#   path_list: 00010203
+#   child_xprv_str: 20f86339d653bb928ad1f7456279692ac6adf89035f846c6659aaa151c034e497387952cb0dbd6c03bae6742ebe3213b7c8da5805900ab743a653dd3799793eb
+# test data 4:
+#   xprv_str: 0031615bdf7906a19360f08029354d12eaaedc9046806aefd672e3b93b024e495a95ba63cf47903eb742cd1843a5252118f24c0c496e9213bd42de70f649a798
+#   path_list: 00
+#   child_xprv_str: 883e65e6e86499bdd170c14d67e62359dd020dd63056a75ff75983a682024e49e8cc52d8e74c5dfd75b0b326c8c97ca7397b7f954ad0b655b8848bfac666f09f
+# test data 5:
+#   xprv_str: c003f4bcccf9ad6f05ad2c84fa5ff98430eb8e73de5de232bc29334c7d074759d513bc370335cac51d77f0be5dfe84de024cfee562530b4d873b5f5e2ff4f57c
+#   path_list: 010203
+#   path_list: 7906a1
+#   child_xprv_str: 4853a0b00bdcb139e85855d9594e5f641b65218db7c50426946511397e094759bd9de7f2dcad9d7d45389bc94baecaec88aabf58f6e1d832b1f9995a93ec37ea
+def xprv_to_child_xprv(xprv_str, path_list):
+    for i in range(len(path_list)):
+        selector_bytes = bytes.fromhex(path_list[i])
+        xpub_str = xprv_to_xpub(xprv_str)
+        xpub_bytes = bytes.fromhex(xpub_str)
+        xprv_bytes = bytes.fromhex(xprv_str)
+        hc_bytes = hmac.HMAC(xpub_bytes[32:], b'N'+xpub_bytes[:32]+selector_bytes, digestmod=hashlib.sha512).digest()
+        hc_bytearr = bytearray(hc_bytes)
+        
+        f = hc_bytearr[:32]
+        f = prune_intermediate_scalar(f)
+        hc_bytearr = f[:32] + hc_bytearr[32:]
+        
+        carry = 0
+        total = 0
+        for i in range(32):
+            total = xprv_bytes[i] + hc_bytearr[i] + carry
+            hc_bytearr[i] = total & 0xff
+            carry = total >> 8
+        if (total >> 8) != 0:
+            print("sum does not fit in 256-bit int")
+        xprv_str = hc_bytearr.hex()
+        
+    child_xprv_str = xprv_str
+    return child_xprv_str
 
 
 # xprv_sign sign message
