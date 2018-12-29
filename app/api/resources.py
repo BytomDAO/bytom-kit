@@ -14,6 +14,7 @@ from app.model.key import xprv_sign
 from app.model.key import xprv_to_xpub
 from app.model.key import xprv_sign
 from app.model.key import xprv_to_child_xprv
+from app.model.key import xpub_to_child_xpub
 
 parser = reqparse.RequestParser()
 parser.add_argument('private_key_str', type=str)
@@ -132,3 +133,12 @@ class Xprv_To_Child_Xprv(Resource):
         path = args.get('path_list')
         child_xprv = xprv_to_child_xprv(xprv, path)
         return child_xprv
+
+class Xpub_To_Child_Xpub(Resource):
+
+    def post(self):
+        args = parser.parse_args()
+        xpub = args.get('xpub_str')
+        path = args.get('path_list')
+        child_xpub = xpub_to_child_xpub(xpub, path)
+        return child_xpub

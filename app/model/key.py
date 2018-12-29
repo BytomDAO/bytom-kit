@@ -244,6 +244,59 @@ def xprv_to_child_xprv(xprv_str, path_list):
     child_xprv_str = xprv_str
     return child_xprv_str
 
+# xpub_to_child_xpub create new xpub through the path
+# xpub_str length is 64 bytes.
+# path_list item is hex string.
+# child_xpub length is 64 bytes.
+# You can get more test data from: https://gist.github.com/zcc0721/1dea9eb1edb04f57bc01fecb867301b8
+# test data 1:
+#   xpub_str: cb22ce197d342d6bb440b0bf13ddd674f367275d28a00f893d7f0b10817690fd01ff37ac4a07869214c2735bba0175e001abe608db18538e083e1e44430a273b
+#   path_list: 010400000000000000
+#   path_list: 0100000000000000
+#   child_xpub_str: 25405adf9bcefebaa2533631a6bdd5a93108e52ed048c7c49df21a28668768f8d15048473b96fc4d3bc041a881168b41552cabe883221a683aeddc37c1f4644c
+# test data 2:
+#   xpub_str: cb22ce197d342d6bb440b0bf13ddd674f367275d28a00f893d7f0b10817690fd01ff37ac4a07869214c2735bba0175e001abe608db18538e083e1e44430a273b
+#   path_list: 00
+#   path_list: 00
+#   child_xpub_str: 1ff4b10aa17eb164a01bedf4f48d55c1bcbd55f28adb85e31c4bad98c070fc4ecb4228fb3f2f848384cc1a9ea82e0b351a551a035dd8ab34e198cfe64df86c79
+# test data 3:
+#   xpub_str: cb22ce197d342d6bb440b0bf13ddd674f367275d28a00f893d7f0b10817690fd01ff37ac4a07869214c2735bba0175e001abe608db18538e083e1e44430a273b
+#   path_list: 00010203
+#   child_xpub_str: 19ab025cd895705c5e2fab8d61e97bcf93670d2c2d6b4cdf06b5347a0cf0527df138d9e540093aad51ed56cf67e6a4b36e6c68327c61593707829339cc9a7f65
+# test data 4:
+#   xpub_str: ead6415a077b91aa7de32e1cf63350f9351d0298f5accc2cf92ef9429bd1f86c166364ce19322721b7dec84442c3665d97d0e995ba4d01c0f4b19b841379ac90
+#   path_list: 00010203
+#   path_list: 03ededed
+#   path_list: 123456
+#   child_xpub_str: c6888c31265519f59975f9fe25a4199735efbb24923648dd880dacb6ed580bdc7b79a9aa09095590175f756c1e11fcb4f8febecb67582c9fea154fd2547cd381
+# test data 5:
+#   xpub_str: 1b0541a7664cee929edb54d9ef21996b90546918a920a77e1cd6015d97c56563d513bc370335cac51d77f0be5dfe84de024cfee562530b4d873b5f5e2ff4f57c
+#   path_list: 010203
+#   path_list: 7906a1
+#   child_xpub_str: e65c1a9714e2116c6e5d57dee188a53b98dc901a21def5a5ca46fcf78303f4f2bd9de7f2dcad9d7d45389bc94baecaec88aabf58f6e1d832b1f9995a93ec37ea
+def xpub_to_child_xpub(xpub_str, path_list):
+    for i in range(len(path_list)):
+        selector_bytes = bytes.fromhex(path_list[i])
+        xpub_bytes = bytes.fromhex(xpub_str)
+        hc_bytes = hmac.HMAC(xpub_bytes[32:], b'N'+xpub_bytes[:32]+selector_bytes, digestmod=hashlib.sha512).digest()
+        hc_bytearr = bytearray(hc_bytes)
+
+        f = hc_bytearr[:32]
+        f = prune_intermediate_scalar(f)
+        f = bytes(f)
+        scalar = decodeint(f)
+        F = scalarmultbase(scalar)
+
+        P = decodepoint(xpub_bytes[:32])
+        P = edwards_add(P, F)
+        public_key = encodepoint(P)
+
+        xpub_bytes = public_key[:32] + hc_bytes[32:]
+        xpub_str = xpub_bytes.hex()
+
+    child_xpub_str = xpub_str
+    return child_xpub_str
+
 
 # xprv_sign sign message
 # xprv_str length is 64 bytes.
