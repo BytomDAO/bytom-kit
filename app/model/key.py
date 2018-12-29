@@ -244,6 +244,7 @@ def xprv_to_child_xprv(xprv_str, path_list):
     child_xprv_str = xprv_str
     return child_xprv_str
 
+
 # xpub_to_child_xpub create new xpub through the path
 # xpub_str length is 64 bytes.
 # path_list item is hex string.
