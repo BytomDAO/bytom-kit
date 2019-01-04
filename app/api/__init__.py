@@ -15,6 +15,7 @@ from app.api.resources import Xprv_Sign
 from app.api.resources import Xprv_To_Xpub
 from app.api.resources import Xprv_To_Child_Xprv
 from app.api.resources import Xpub_To_Child_Xpub
+from app.api.resources import Create_P2WPKH_Program
 
 blueprint = Blueprint('api', __name__, url_prefix='/api/v1')
 api = Api(blueprint)
@@ -33,3 +34,4 @@ api.add_resource(Xprv_Sign, '/xprv_sign')
 api.add_resource(Xprv_To_Xpub, '/xprv_to_xpub')
 api.add_resource(Xprv_To_Child_Xprv, '/xprv_to_child_xprv')
 api.add_resource(Xpub_To_Child_Xpub, '/xpub_to_child_xpub')
+api.add_resource(Create_P2WPKH_Program, '/create_P2WPKH_program')

@@ -15,6 +15,7 @@ from app.model.key import xprv_to_xpub
 from app.model.key import xprv_sign
 from app.model.key import xprv_to_child_xprv
 from app.model.key import xpub_to_child_xpub
+from app.model.receiver import create_P2WPKH_program
 
 parser = reqparse.RequestParser()
 parser.add_argument('private_key_str', type=str)
@@ -27,6 +28,9 @@ parser.add_argument('seed_str', type=str)
 parser.add_argument('xprv_str', type=str)
 parser.add_argument('xpub_str', type=str)
 parser.add_argument('path_list', type=str, action='append')
+parser.add_argument('account_index_int', type=int)
+parser.add_argument('address_index_int', type=int)
+parser.add_argument('change_bool', type=bool)
 
 class Hello(Resource):
 
@@ -142,3 +146,14 @@ class Xpub_To_Child_Xpub(Resource):
         path = args.get('path_list')
         child_xpub = xpub_to_child_xpub(xpub, path)
         return child_xpub
+
+class Create_P2WPKH_Program(Resource):
+
+    def post(self):
+        args = parser.parse_args()
+        account_index = args.get('account_index_int')
+        address_index = args.get('address_index_int')
+        change = args.get('change_bool')
+        xpub = args.get('xpub_str')
+        P2WPKH_program = create_P2WPKH_program(account_index, address_index, change, xpub)
+        return P2WPKH_program
