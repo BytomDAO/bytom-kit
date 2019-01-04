@@ -1,3 +1,5 @@
+# from flask_restplus import inputs
+from flask_restful import inputs
 from flask_restful import Resource
 from flask_restful import reqparse
 from app.model.hello import get_hello_result
@@ -30,7 +32,7 @@ parser.add_argument('xpub_str', type=str)
 parser.add_argument('path_list', type=str, action='append')
 parser.add_argument('account_index_int', type=int)
 parser.add_argument('address_index_int', type=int)
-parser.add_argument('change_bool', type=bool)
+parser.add_argument('change_bool', type=inputs.boolean)
 
 class Hello(Resource):
 
@@ -155,5 +157,5 @@ class Create_P2WPKH_Program(Resource):
         address_index = args.get('address_index_int')
         change = args.get('change_bool')
         xpub = args.get('xpub_str')
-        P2WPKH_program = create_P2WPKH_program(account_index, address_index, change, xpub)
-        return P2WPKH_program
+        control_program = create_P2WPKH_program(account_index, address_index, change, xpub)
+        return control_program

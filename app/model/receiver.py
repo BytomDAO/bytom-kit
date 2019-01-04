@@ -13,6 +13,7 @@ def get_path_from_index(account_index_int, address_index_int, change_bool):
     path_list = ['2c000000', '99000000']
     account_index_str = (account_index_int).to_bytes(4, byteorder='little').hex()
     path_list.append(account_index_str)
+    print("change_bool:", type(change_bool), change_bool)
     if change_bool == True:
         branch_str = (1).to_bytes(4, byteorder='little').hex()
         print("true")
@@ -35,6 +36,6 @@ def create_P2WPKH_program(account_index_int, address_index_int, change_bool, xpu
     ripemd160 = hashlib.new('ripemd160')
     ripemd160.update(child_public_key_byte)
     public_key_hash_str = ripemd160.hexdigest()
-    P2WPKH_program_str = '0014' + public_key_hash_str
+    control_program_str = '0014' + public_key_hash_str
 
-    return P2WPKH_program_str
+    return control_program_str
