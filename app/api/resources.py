@@ -1,4 +1,3 @@
-# from flask_restplus import inputs
 from flask_restful import inputs
 from flask_restful import Resource
 from flask_restful import reqparse
@@ -18,6 +17,7 @@ from app.model.key import xprv_sign
 from app.model.key import xprv_to_child_xprv
 from app.model.key import xpub_to_child_xpub
 from app.model.receiver import create_P2WPKH_program
+from app.model.receiver import create_address
 
 parser = reqparse.RequestParser()
 parser.add_argument('private_key_str', type=str)
@@ -33,6 +33,8 @@ parser.add_argument('path_list', type=str, action='append')
 parser.add_argument('account_index_int', type=int)
 parser.add_argument('address_index_int', type=int)
 parser.add_argument('change_bool', type=inputs.boolean)
+parser.add_argument('control_program_str', type=str)
+parser.add_argument('network_str', type=str)
 
 class Hello(Resource):
 
@@ -159,3 +161,12 @@ class Create_P2WPKH_Program(Resource):
         xpub = args.get('xpub_str')
         control_program = create_P2WPKH_program(account_index, address_index, change, xpub)
         return control_program
+
+class Create_Address(Resource):
+
+    def post(self):
+        args = parser.parse_args()
+        control_program = args.get('control_program_str')
+        network = args.get('network_str')
+        address = create_address(control_program, network)
+        return address
