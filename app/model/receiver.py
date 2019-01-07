@@ -84,6 +84,34 @@ def create_P2WPKH_program(account_index_int, address_index_int, change_bool, xpu
     return control_program_str
 
 
+# create_address create address
+# You can get more test data from: https://gist.github.com/zcc0721/8f52d0a80a0a9f964e9d9d9a50e940c5
+# Please attention:
+#   network_str: mainnet/testnet/solonet
+# test data 1:
+#   control_program_str: 001431f2b90b469e89361225aae370f73e5473b9852b
+#   network_str: mainnet
+#   address_str: bm1qx8etjz6xn6ynvy394t3hpae723emnpft3nrwej
+# test data 2:
+#   control_program_str: 0014eefb8d0688d7960dfbd79bb3aa1bcaa3ec34415d
+#   network_str: mainnet
+#   address_str: bm1qamac6p5g67tqm77hnwe65x7250krgs2avl0nr6
+# test data 3:
+#   control_program_str: 0014eefb8d0688d7960dfbd79bb3aa1bcaa3ec34415d
+#   network_str: testnet
+#   address_str: tm1qamac6p5g67tqm77hnwe65x7250krgs2agfwhrt
+# test data 4:
+#   control_program_str: 0014d234314ea1533dee584417ecb922f904b8dd6c6b
+#   network_str: testnet
+#   address_str: tm1q6g6rzn4p2v77ukzyzlktjgheqjud6mrt7emxen
+# test data 5:
+#   control_program_str: 0014eefb8d0688d7960dfbd79bb3aa1bcaa3ec34415d
+#   network_str: solonet
+#   address_str: sm1qamac6p5g67tqm77hnwe65x7250krgs2adw9jr5
+# test data 6:
+#   control_program_str: 0014052620b86a6d5e07311d5019dffa3864ccc8a6bd
+#   network_str: solonet
+#   address_str: sm1qq5nzpwr2d40qwvga2qval73cvnxv3f4aa9xzh9
 def create_address(control_program_str, network_str):
     public_key_hash_str = control_program_str[4:]
     if network_str == 'mainnet':
