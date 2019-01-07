@@ -18,6 +18,7 @@ from app.model.key import xprv_to_child_xprv
 from app.model.key import xpub_to_child_xpub
 from app.model.receiver import create_P2WPKH_program
 from app.model.receiver import create_address
+from app.model.receiver import get_path_from_index
 
 parser = reqparse.RequestParser()
 parser.add_argument('private_key_str', type=str)
@@ -150,6 +151,17 @@ class Xpub_To_Child_Xpub(Resource):
         path = args.get('path_list')
         child_xpub = xpub_to_child_xpub(xpub, path)
         return child_xpub
+
+class Get_Path_From_Index(Resource):
+
+    def post(self):
+        args = parser.parse_args()
+        account_index = args.get('account_index_int')
+        address_index = args.get('address_index_int')
+        change = args.get('change_bool')
+        path_list = get_path_from_index(account_index, address_index, change)
+        return path_list
+
 
 class Create_P2WPKH_Program(Resource):
 
