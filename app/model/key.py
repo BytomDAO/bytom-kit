@@ -86,17 +86,13 @@ def mnemonic_to_seed(mnemonic_str):
 # This is NOT the same pruning as in Ed25519: it additionally clears the third
 # highest bit to ensure subkeys do not overflow the second highest bit.
 def prune_root_scalar(s_str):
-    s_0_int = int.from_bytes(bytes.fromhex(s_str[0:2]), byteorder='big') & 248
-    s_0_str = "%0.2x" % s_0_int
-    new_s_str = s_0_str + s_str[2:]
-    s_31_int = int.from_bytes(bytes.fromhex(new_s_str[62:64]), byteorder='big') & 31
-    s_31_str = "%0.2x" % s_31_int
-    new_s_str = new_s_str[:62] + s_31_str + new_s_str[64:]
-    s_31_int = int.from_bytes(bytes.fromhex(new_s_str[62:64]), byteorder='big') | 64
-    s_31_str = "%0.2x" % s_31_int
-    new_s_str = new_s_str[:62] + s_31_str + new_s_str[64:]
-    
-    return new_s_str
+    s_bytes = bytes.fromhex(s_str)
+    s = bytearray(s_bytes)
+    s[0] = s[0] & 248
+    s[31] = s[31] & 31 # clear top 3 bits
+    s[31] = s[31] | 64 # set second highest bit
+
+    return s
 
 
 # seed_to_root_xprv create rootxprv from seed
@@ -114,7 +110,7 @@ def prune_root_scalar(s_str):
 #   root_xprv_str: a01d6b741b0e74b8d0836ac22b675bbf8e108148ef018d1b000aef1a899a134bd316c0f59e7333520ae1a429504073b2773869e95aa95bb3a4fa0ec76744025c
 def seed_to_root_xprv(seed_str):
     hc_str = hmac.HMAC(b'Root', bytes.fromhex(seed_str), digestmod=hashlib.sha512).hexdigest()
-    root_xprv_str = prune_root_scalar(hc_str[:64]) + hc_str[64:]
+    root_xprv_str = prune_root_scalar(hc_str[:64]).hex() + hc_str[64:]
 
     return root_xprv_str
 
