@@ -15,7 +15,6 @@ def create_entropy():
         # create interger in range [1,15]
         num = random.randint(0,15)
         entropy_str += hex_str[num]
-
     return entropy_str
 
 
@@ -58,7 +57,6 @@ def entropy_to_mnemonic(entropy_str):
     for i in range(12):
         mnemonic_str += mnemonic_list[i][:-1]
         mnemonic_str += " "
-
     return mnemonic_str[:-1]
 
 
@@ -78,7 +76,6 @@ def mnemonic_to_seed(mnemonic_str):
     password_str = mnemonic_str
     salt_str = "mnemonic"
     seed_str = pbkdf2.PBKDF2(password_str, salt_str, iterations=2048, digestmodule=hashlib.sha512, macmodule=hmac).hexread(64)
-
     return seed_str
 
 
@@ -91,7 +88,6 @@ def prune_root_scalar(s_str):
     s[0] = s[0] & 248
     s[31] = s[31] & 31 # clear top 3 bits
     s[31] = s[31] | 64 # set second highest bit
-
     return s
 
 
@@ -111,7 +107,6 @@ def prune_root_scalar(s_str):
 def seed_to_root_xprv(seed_str):
     hc_str = hmac.HMAC(b'Root', bytes.fromhex(seed_str), digestmod=hashlib.sha512).hexdigest()
     root_xprv_str = prune_root_scalar(hc_str[:64]).hex() + hc_str[64:]
-
     return root_xprv_str
 
 
@@ -155,7 +150,6 @@ def xprv_to_xpub(xprv_str):
 def xprv_to_expanded_private_key(xprv_str):
     hc_str = hmac.HMAC(b'Expand', bytes.fromhex(xprv_str), digestmod=hashlib.sha512).hexdigest()
     expanded_private_key_str = xprv_str[:64] + hc_str[64:]
-
     return expanded_private_key_str
 
 
@@ -173,7 +167,6 @@ def xprv_to_expanded_private_key(xprv_str):
 #   public_key_str: b435f948bd3748ede8f9d6f59728d669939e79c6c885667a5c138e05bbabde1d
 def xpub_to_public_key(xpub_str):
     public_key_str = xpub_str[:64]
-
     return public_key_str
 
 
@@ -343,7 +336,6 @@ def xprv_sign(xprv_str, message_str):
 
     signature_bytes = encoded_r + s
     signature_str = signature_bytes.hex()
-
     return signature_str
 
 
@@ -370,5 +362,4 @@ def xprv_sign(xprv_str, message_str):
 def xpub_verify(xpub_str, message_str, signature_str):
     result = False
     result = verify(xpub_to_public_key(xpub_str), signature_str, message_str)
-
     return result

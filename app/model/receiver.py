@@ -36,7 +36,6 @@ def get_path_from_index(account_index_int, address_index_int, change_bool):
     path_list.append(branch_str)
     address_index_str = (address_index_int).to_bytes(4, byteorder='little').hex()
     path_list.append(address_index_str)
-
     return path_list
 
 
@@ -80,7 +79,6 @@ def create_P2WPKH_program(account_index_int, address_index_int, change_bool, xpu
     ripemd160.update(child_public_key_byte)
     public_key_hash_str = ripemd160.hexdigest()
     control_program_str = '0014' + public_key_hash_str
-
     return control_program_str
 
 
@@ -121,5 +119,4 @@ def create_address(control_program_str, network_str):
     else:
         hrp = 'sm'
     address_str = segwit_addr.encode(hrp, 0, bytes.fromhex(public_key_hash_str))
-
     return address_str

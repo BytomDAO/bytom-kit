@@ -20,7 +20,6 @@ def sign(private_key_str, message_str):
     signing_key = ed25519.SigningKey(bytes.fromhex(private_key_str))
     # signature = signing_key.sign(message_str.encode(), encoding='hex')
     signature = signing_key.sign(bytes.fromhex(message_str), encoding='hex')
-
     return signature.decode()
 
 
