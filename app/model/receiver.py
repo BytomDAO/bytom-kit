@@ -1,6 +1,9 @@
 import hashlib
 from app.model.key import *
 from app.model import segwit_addr
+import qrcode
+import pybase64
+from io import BytesIO
 
 # get_path_from_index create xpub path from account key index and current address index
 # path: purpose(0x2c=44)/coin_type(btm:0x99)/account_index/change(1 or 0)/address_index
@@ -120,3 +123,11 @@ def create_address(control_program_str, network_str):
         hrp = 'sm'
     address_str = segwit_addr.encode(hrp, 0, bytes.fromhex(public_key_hash_str))
     return address_str
+
+# create_address_qrcode create address qrcode, then encode it to base64
+def create_address_qrcode(address_str):
+    img = qrcode.make(address_str)
+    buffered = BytesIO()
+    img.save(buffered, format="JPEG")
+    return pybase64.b64encode(buffered.getvalue()).decode("utf-8")
+

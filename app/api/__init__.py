@@ -19,6 +19,7 @@ from app.api.resources import Create_P2WPKH_Program
 from app.api.resources import Create_Address
 from app.api.resources import Get_Path_From_Index
 from app.api.resources import Broadcast_Transaction
+from app.api.resources import Create_Address_QRcode
 
 blueprint = Blueprint('api', __name__, url_prefix='/api/v1')
 api = Api(blueprint)
@@ -41,3 +42,4 @@ api.add_resource(Create_P2WPKH_Program, '/create_P2WPKH_program')
 api.add_resource(Create_Address, '/create_address')
 api.add_resource(Get_Path_From_Index, '/get_path_from_index')
 api.add_resource(Broadcast_Transaction, '/broadcast_transaction')
+api.add_resource(Create_Address_QRcode, '/create_address_qrcode')
