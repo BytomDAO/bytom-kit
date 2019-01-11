@@ -19,7 +19,7 @@ from app.model.key import xpub_to_child_xpub
 from app.model.receiver import create_P2WPKH_program
 from app.model.receiver import create_address
 from app.model.receiver import get_path_from_index
-from app.model.receiver import create_address_qrcode
+from app.model.receiver import create_qrcode_base64
 from app.model.transaction import broadcast_transaction
 
 
@@ -41,6 +41,7 @@ parser.add_argument('control_program_str', type=str)
 parser.add_argument('network_str', type=str)
 parser.add_argument('raw_transaction_str', type=str)
 parser.add_argument('address_str', type=str)
+parser.add_argument('s', type=str)
 
 class Hello(Resource):
 
@@ -197,10 +198,10 @@ class Broadcast_Transaction(Resource):
         response = broadcast_transaction(raw_transaction, network)
         return response
 
-class Create_Address_QRcode(Resource):
+class Create_QRcode_Base64(Resource):
 
     def post(self):
         args = parser.parse_args()
-        address = args.get('address_str')
-        img = create_address_qrcode(address)
+        s = args.get('s')
+        img = create_qrcode_base64(s)
         return img

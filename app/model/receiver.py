@@ -124,9 +124,10 @@ def create_address(control_program_str, network_str):
     address_str = segwit_addr.encode(hrp, 0, bytes.fromhex(public_key_hash_str))
     return address_str
 
-# create_address_qrcode create address qrcode, then encode it to base64
-def create_address_qrcode(address_str):
-    img = qrcode.make(address_str)
+# create_qrcode_base64 create qrcode, then encode it to base64
+# type(s) is str
+def create_qrcode_base64(s):
+    img = qrcode.make(s)
     buffered = BytesIO()
     img.save(buffered, format="JPEG")
     return pybase64.b64encode(buffered.getvalue()).decode("utf-8")
