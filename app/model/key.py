@@ -41,9 +41,9 @@ def entropy_to_mnemonic(entropy_str):
     for _ in range(mnemonic_length):
         mnemonic_list.append('')
 
-    entropy_bytes = bytes.fromhex(entropy_str)
+    entropy_bytes = bytes.fromhex(entropy_str[:32])
     checksum = hashlib.sha256(entropy_bytes).hexdigest()[:1]
-    new_entropy_str = "0" + entropy_str + checksum
+    new_entropy_str = "0" + entropy_str[:32] + checksum
     new_entropy_bytes = bytes.fromhex(new_entropy_str)
     new_entropy_int = int.from_bytes(new_entropy_bytes, byteorder='big')
 
