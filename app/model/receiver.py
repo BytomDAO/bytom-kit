@@ -39,7 +39,9 @@ def get_path_from_index(account_index_int, address_index_int, change_bool):
     path_list.append(branch_str)
     address_index_str = (address_index_int).to_bytes(4, byteorder='little').hex()
     path_list.append(address_index_str)
-    return path_list
+    return {
+        "path": path_list
+    }
 
 
 # create_P2WPKH_program create control program
@@ -73,16 +75,18 @@ def get_path_from_index(account_index_int, address_index_int, change_bool):
 #   xpub_str: f744493a021b65814ea149118c98aae8d1e217de29fefb7b2024ca341cd834586ee48bbcf1f4ae801ecb8c6784b044fc62a74c58c816d14537e1573c3e20ce79
 #   control_program: 001431f2b90b469e89361225aae370f73e5473b9852b
 def create_P2WPKH_program(account_index_int, address_index_int, change_bool, xpub_str):
-    path_list = get_path_from_index(account_index_int, address_index_int, change_bool)
-    child_xpub_str = xpub_to_child_xpub(xpub_str, path_list)
-    child_public_key_str = xpub_to_public_key(child_xpub_str)
+    path_list = get_path_from_index(account_index_int, address_index_int, change_bool)['path']
+    child_xpub_str = xpub_to_child_xpub(xpub_str, path_list)['child_xpub']
+    child_public_key_str = xpub_to_public_key(child_xpub_str)['public_key']
     child_public_key_byte = bytes.fromhex(child_public_key_str)
     
     ripemd160 = hashlib.new('ripemd160')
     ripemd160.update(child_public_key_byte)
     public_key_hash_str = ripemd160.hexdigest()
     control_program_str = '0014' + public_key_hash_str
-    return control_program_str
+    return {
+        "control_program": control_program_str
+    }
 
 
 # create_address create address
@@ -122,7 +126,9 @@ def create_address(control_program_str, network_str):
     else:
         hrp = 'sm'
     address_str = segwit_addr.encode(hrp, 0, bytes.fromhex(public_key_hash_str))
-    return address_str
+    return {
+        "address": address_str
+    }
 
 # create_qrcode_base64 create qrcode, then encode it to base64
 # type(s) is str
@@ -130,5 +136,8 @@ def create_qrcode_base64(s):
     img = qrcode.make(s)
     buffered = BytesIO()
     img.save(buffered, format="JPEG")
-    return pybase64.b64encode(buffered.getvalue()).decode("utf-8")
+    base64_str = pybase64.b64encode(buffered.getvalue()).decode("utf-8")
+    return {
+        "base64": base64_str
+    }
 

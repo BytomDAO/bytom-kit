@@ -21,4 +21,6 @@ def broadcast_transaction(raw_transaction_str, network_str):
     else:
         url = "https://blockmeta.com/api/wisdom/broadcast-transaction"
     response = requests.post(url, headers=headers, data=raw_transaction_json)
-    return response.text[:-1]
+    return {
+        "response": response.text[:-1]
+    }

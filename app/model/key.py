@@ -15,7 +15,9 @@ def create_entropy():
         # create interger in range [1,15]
         num = random.randint(0,15)
         entropy_str += hex_str[num]
-    return entropy_str
+    return {
+        "entropy": entropy_str
+        }
 
 
 # entropy_to_mnemonic create mnemonic from 128 bits entropy(the entropy_str length is 32)
@@ -57,7 +59,9 @@ def entropy_to_mnemonic(entropy_str):
     for i in range(12):
         mnemonic_str += mnemonic_list[i][:-1]
         mnemonic_str += " "
-    return mnemonic_str[:-1]
+    return {
+        "mnemonic": mnemonic_str[:-1]
+        }
 
 
 # mnemonic_to_seed create seed from mnemonic
@@ -76,7 +80,9 @@ def mnemonic_to_seed(mnemonic_str):
     password_str = mnemonic_str
     salt_str = "mnemonic"
     seed_str = pbkdf2.PBKDF2(password_str, salt_str, iterations=2048, digestmodule=hashlib.sha512, macmodule=hmac).hexread(64)
-    return seed_str
+    return {
+        "seed": seed_str
+        }
 
 
 # s_str must be >= 32 bytes long and gets rewritten in place.
@@ -107,7 +113,9 @@ def prune_root_scalar(s_str):
 def seed_to_root_xprv(seed_str):
     hc_str = hmac.HMAC(b'Root', bytes.fromhex(seed_str), digestmod=hashlib.sha512).hexdigest()
     root_xprv_str = prune_root_scalar(hc_str[:64]).hex() + hc_str[64:]
-    return root_xprv_str
+    return {
+        "root_xprv": root_xprv_str
+        }
 
 
 # xprv_to_xpub derives new xpub from xprv
@@ -133,7 +141,9 @@ def xprv_to_xpub(xprv_str):
     buf = encodepoint(scalarmultbase(scalar))
     xpub = buf + xprv_bytes[len(xprv_bytes)//2:]
     xpub_str = xpub.hex()
-    return xpub_str
+    return {
+        "xpub": xpub_str
+        }
 
 
 # xprv_to_expanded_private_key create expanded private key from xprv
@@ -150,7 +160,9 @@ def xprv_to_xpub(xprv_str):
 def xprv_to_expanded_private_key(xprv_str):
     hc_str = hmac.HMAC(b'Expand', bytes.fromhex(xprv_str), digestmod=hashlib.sha512).hexdigest()
     expanded_private_key_str = xprv_str[:64] + hc_str[64:]
-    return expanded_private_key_str
+    return {
+        "expanded_private_key": expanded_private_key_str
+        }
 
 
 # xpub_to_public_key create 32 bytes public key from xpub
@@ -167,7 +179,9 @@ def xprv_to_expanded_private_key(xprv_str):
 #   public_key_str: b435f948bd3748ede8f9d6f59728d669939e79c6c885667a5c138e05bbabde1d
 def xpub_to_public_key(xpub_str):
     public_key_str = xpub_str[:64]
-    return public_key_str
+    return {
+        "public_key": public_key_str
+        }
 
 
 def prune_intermediate_scalar(f):
@@ -210,7 +224,7 @@ def prune_intermediate_scalar(f):
 def xprv_to_child_xprv(xprv_str, path_list):
     for i in range(len(path_list)):
         selector_bytes = bytes.fromhex(path_list[i])
-        xpub_str = xprv_to_xpub(xprv_str)
+        xpub_str = xprv_to_xpub(xprv_str)['xpub']
         xpub_bytes = bytes.fromhex(xpub_str)
         xprv_bytes = bytes.fromhex(xprv_str)
         hc_bytes = hmac.HMAC(xpub_bytes[32:], b'N'+xpub_bytes[:32]+selector_bytes, digestmod=hashlib.sha512).digest()
@@ -231,7 +245,9 @@ def xprv_to_child_xprv(xprv_str, path_list):
         xprv_str = hc_bytearr.hex()
         
     child_xprv_str = xprv_str
-    return child_xprv_str
+    return {
+        "child_xprv": child_xprv_str
+        }
 
 
 # xpub_to_child_xpub create new xpub through the path
@@ -285,7 +301,9 @@ def xpub_to_child_xpub(xpub_str, path_list):
         xpub_str = xpub_bytes.hex()
 
     child_xpub_str = xpub_str
-    return child_xpub_str
+    return {
+        "child_xpub": child_xpub_str
+        }
 
 
 # xprv_sign sign message
@@ -309,7 +327,7 @@ def xpub_to_child_xpub(xpub_str, path_list):
 #   message_str: 1246b84985e1ab5f83f4ec2bdf271114666fd3d9e24d12981a3c861b9ed523c6
 #   signature_str: ab18f49b23d03295bc2a3f2a7d5bb53a2997bed733e1fc408b50ec834ae7e43f7da40fe5d9d50f6ef2d188e1d27f976aa2586cef1ba00dd098b5c9effa046306
 def xprv_sign(xprv_str, message_str):
-    xprv_str = xprv_to_expanded_private_key(xprv_str)
+    xprv_str = xprv_to_expanded_private_key(xprv_str)['expanded_private_key']
     xprv_bytes = bytes.fromhex(xprv_str)
     message_bytes = bytes.fromhex(message_str)
     data_bytes = xprv_bytes[32:64] + message_bytes
@@ -321,7 +339,7 @@ def xprv_sign(xprv_str, message_str):
 
     scalar = decodeint(message_digest_reduced)
     encoded_r = encodepoint(scalarmultbase(scalar))
-    xpub_str = xprv_to_xpub(xprv_str)
+    xpub_str = xprv_to_xpub(xprv_str)['xpub']
     xpub_bytes = bytes.fromhex(xpub_str)
     hram_digest_data = encoded_r + xpub_bytes[:32] + message_bytes
 
@@ -336,7 +354,9 @@ def xprv_sign(xprv_str, message_str):
 
     signature_bytes = encoded_r + s
     signature_str = signature_bytes.hex()
-    return signature_str
+    return {
+        "signature": signature_str
+        }
 
 
 # xpub_verify verify signature
@@ -361,5 +381,7 @@ def xprv_sign(xprv_str, message_str):
 #   signature_str: ab18f49b23d03295bc2a3f2a7d5bb53a2997bed733e1fc408b50ec834ae7e43f7da40fe5d9d50f6ef2d188e1d27f976aa2586cef1ba00dd098b5c9effa046306
 def xpub_verify(xpub_str, message_str, signature_str):
     result = False
-    result = verify(xpub_to_public_key(xpub_str), signature_str, message_str)
-    return result
+    result = verify(xpub_to_public_key(xpub_str)['public_key'], signature_str, message_str)
+    return {
+        "result": result
+        }

@@ -20,7 +20,9 @@ def sign(private_key_str, message_str):
     signing_key = ed25519.SigningKey(bytes.fromhex(private_key_str))
     # signature = signing_key.sign(message_str.encode(), encoding='hex')
     signature = signing_key.sign(bytes.fromhex(message_str), encoding='hex')
-    return signature.decode()
+    return {
+        "signature": signature.decode()
+    }
 
 
 def verify(public_key_str, signature_str, message_str):
@@ -31,4 +33,6 @@ def verify(public_key_str, signature_str, message_str):
         result = True
     except ed25519.BadSignatureError:
         result = False
-    return result
+    return {
+        "result": result
+    }
