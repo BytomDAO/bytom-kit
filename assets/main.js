@@ -1,10 +1,9 @@
 $(function(){
-  // 创建公钥按钮点击事件
-  $('#btnCreate').click(function(){
-    console.log('创建公钥');
+  $('#btnCreateNewKey').click(function(){
+    console.log('创建新密钥');
     $.ajax({
-      method: 'get',  //get or post
-      url: '/test',
+      method: 'post',  //get or post
+      url: 'http://127.0.0.1:5000/api/v1/create_entropy',
       data: {},
       dataType: 'json',
     }).done(function(data){
