@@ -15,6 +15,7 @@ $(function(){
       $('#txtSeed').val(data.seed)
       $('#txtRootXprv').val(data.xprv)
       $('#txtRootXpub').val(data.xpub)
+      $('#qrcode').attr('src', 'data:image/jpg;base64,' + data.xprv_base64)
     }).fail(function(err){
       layer.alert('创建失败' + err);
     });
@@ -27,5 +28,6 @@ $(function(){
     $('#txtSeed').val('')
     $('#txtRootXprv').val('')
     $('#txtRootXpub').val('')
+    $('#qrcode').attr('src', 'data:image/jpg;base64,')
   })
 });
