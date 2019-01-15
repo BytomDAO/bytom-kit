@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Bytom Kit</title>
+  <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="./assets/main.css">
+  <script src="./node_modules/jquery/dist/jquery.min.js"></script>
+  <script src="./node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script src="./node_modules/layer/layer.js"></script>
+  <script src="./assets/main.js"></script>
+</head>
+
+<body>
+  <nav class="navbar navbar-default">
+    <div class="navbar-header">
+      <a href="#" class="navbar-brand">Bytom Kit</a>
+    </div>
+  </nav>
+  <div class="panel panel-default sc-bd">
+    <div class="panel-heading">
+      <h3 class="panel-title">Key </h3>
+    </div>
+    <div class="panel-body">
+      <form class="form-horizontal">
+        <!-- 熵 -->
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Entropy</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="txtEntropy" placeholder="16 Bytes entropy, e.g. 58b39966f63d490314134c0f583018db">
+          </div>
+        </div>
+        <!-- 助记词 -->
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Mnemonics</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="txtMnemonics" placeholder="12 mnemonics, e.g. flavor orphan fluid unaware stand light expect hat aunt screen alert response">
+          </div>
+        </div>
+        <!-- 种子 -->
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Seed</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="txtSeed" placeholder="64 Bytes seed, e.g. ba87798bdf2def688ecfdae52b039ce1c9b05881d762e64a6a3a9e9472bdf1381e7517fcbb9c92ca666edb4f22a58be4883f133736634da09e7b389a3de6f1d1">
+          </div>
+        </div>
+        <!-- 根扩展私钥 -->
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Root Expanded Private Key</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="txtRootXprv" placeholder="64 Bytes root expanded private key, e.g. 20c96e3a582684c4bffc71be0c8aa06b8948a65bdf7cfac4533f9e07c98afc47c976554fbd99c9f63c7fcefb089f65c5db6a1af4429600384b1d9f2751cef942">
+          </div>
+        </div>
+        <!-- 根扩展公钥 -->
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Root Expanded Public Key</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="txtRootXpub" placeholder="64 Bytes root expanded public key, e.g. 8680afdf7c21f5315d6a40183653c8def35679f8bae870687bc786df54317863c976554fbd99c9f63c7fcefb089f65c5db6a1af4429600384b1d9f2751cef942">
+          </div>
+        </div>
+        <!-- 根扩展私钥二维码
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Root Expanded Public Key</label>
+          <div class="col-sm-10">
+            <input type="img" class="form-control" id="" placeholder="64 Bytes root expanded public key, e.g. afa3a86bbec2f40bb32833fc6324593824c4fc7821ed32eac1f762b5893e56745f66a6c6f2588b3d627680aa4e0e50efd25065097b3daa8c6a19d606838fe7d4">
+          </div>
+        </div> -->
+        <div class="form-group">
+          <div class="col-sm-offset-2 col-sm-10">
+            <a id="btnCreateNewKey" class="btn btn-primary">Create New Key</a> 
+            <a id="btnReset" class="btn btn-primary">Reset</a>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</body>
+
+</html>

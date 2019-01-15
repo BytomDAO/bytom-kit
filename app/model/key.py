@@ -6,6 +6,7 @@ import ed25519
 from app.model.signature import *
 from app.model.edwards25519 import *
 from app.model.utils import *
+from app.model import receiver
 
 # create_key create 128 bits entropy
 def create_entropy():
@@ -385,3 +386,21 @@ def xpub_verify(xpub_str, message_str, signature_str):
     return {
         "result": result
         }
+
+
+def create_new_key():
+    entropy_str = create_entropy()['entropy']
+    mnemonic_str = entropy_to_mnemonic(entropy_str)['mnemonic']
+    seed_str = mnemonic_to_seed(mnemonic_str)['seed']
+    root_xprv_str = seed_to_root_xprv(seed_str)['root_xprv']
+    xpub_str = xprv_to_xpub(root_xprv_str)['xpub']
+    xprv_base64 = receiver.create_qrcode_base64(root_xprv_str)['base64']
+    return {
+        "entropy": entropy_str,
+        "mnemonic": mnemonic_str,
+        "seed": seed_str,
+        "xprv": root_xprv_str,
+        "xpub": xpub_str,
+        "xprv_base64": xprv_base64
+    }
+

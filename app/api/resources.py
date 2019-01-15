@@ -21,6 +21,7 @@ from app.model.receiver import create_address
 from app.model.receiver import get_path_from_index
 from app.model.receiver import create_qrcode_base64
 from app.model.transaction import broadcast_transaction
+from app.model.key import create_new_key
 
 
 parser = reqparse.RequestParser()
@@ -205,3 +206,8 @@ class Create_QRcode_Base64(Resource):
         s = args.get('s')
         img = create_qrcode_base64(s)
         return img
+
+class Create_New_Key(Resource):
+
+    def post(self):
+        return create_new_key()
