@@ -21,6 +21,7 @@ from app.api.resources import Get_Path_From_Index
 from app.api.resources import Broadcast_Transaction
 from app.api.resources import Create_QRcode_Base64
 from app.api.resources import Create_New_Key
+from app.api.resources import Create_New_Address
 
 blueprint = Blueprint('api', __name__, url_prefix='/api/v1')
 api = Api(blueprint)
@@ -45,3 +46,4 @@ api.add_resource(Get_Path_From_Index, '/get_path_from_index')
 api.add_resource(Broadcast_Transaction, '/broadcast_transaction')
 api.add_resource(Create_QRcode_Base64, '/create_qrcode_base64')
 api.add_resource(Create_New_Key, '/create_new_key')
+api.add_resource(Create_New_Address, '/create_new_address')

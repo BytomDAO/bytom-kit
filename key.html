@@ -30,35 +30,35 @@
         <div class="form-group">
           <label class="col-sm-2 control-label">Entropy</label>
           <div class="col-sm-10">
-            <input type="text" class="form-control" id="txtEntropy" placeholder="16 Bytes entropy, e.g. 58b39966f63d490314134c0f583018db">
+            <input type="text" class="form-control" id="txtEntropy" placeholder="16 Bytes entropy, e.g. 58b39966f63d490314134c0f583018db" readonly>
           </div>
         </div>
         <!-- 助记词 -->
         <div class="form-group">
           <label class="col-sm-2 control-label">Mnemonics</label>
           <div class="col-sm-10">
-            <input type="text" class="form-control" id="txtMnemonics" placeholder="12 mnemonics, e.g. flavor orphan fluid unaware stand light expect hat aunt screen alert response">
+            <input type="text" class="form-control" id="txtMnemonics" placeholder="12 mnemonics, e.g. flavor orphan fluid unaware stand light expect hat aunt screen alert response" readonly>
           </div>
         </div>
         <!-- 种子 -->
         <div class="form-group">
           <label class="col-sm-2 control-label">Seed</label>
           <div class="col-sm-10">
-            <input type="text" class="form-control" id="txtSeed" placeholder="64 Bytes seed, e.g. ba87798bdf2def688ecfdae52b039ce1c9b05881d762e64a6a3a9e9472bdf1381e7517fcbb9c92ca666edb4f22a58be4883f133736634da09e7b389a3de6f1d1">
+            <input type="text" class="form-control" id="txtSeed" placeholder="64 Bytes seed, e.g. ba87798bdf2def688ecfdae52b039ce1c9b05881d762e64a6a3a9e9472bdf1381e7517fcbb9c92ca666edb4f22a58be4883f133736634da09e7b389a3de6f1d1" readonly>
           </div>
         </div>
         <!-- 根扩展私钥 -->
         <div class="form-group">
           <label class="col-sm-2 control-label">Root Expanded Private Key</label>
           <div class="col-sm-10">
-            <input type="text" class="form-control" id="txtRootXprv" placeholder="64 Bytes root expanded private key, e.g. 20c96e3a582684c4bffc71be0c8aa06b8948a65bdf7cfac4533f9e07c98afc47c976554fbd99c9f63c7fcefb089f65c5db6a1af4429600384b1d9f2751cef942">
+            <input type="text" class="form-control" id="txtRootXprv" placeholder="64 Bytes root expanded private key, e.g. 20c96e3a582684c4bffc71be0c8aa06b8948a65bdf7cfac4533f9e07c98afc47c976554fbd99c9f63c7fcefb089f65c5db6a1af4429600384b1d9f2751cef942" readonly>
           </div>
         </div>
         <!-- 根扩展公钥 -->
         <div class="form-group">
           <label class="col-sm-2 control-label">Root Expanded Public Key</label>
           <div class="col-sm-10">
-            <input type="text" class="form-control" id="txtRootXpub" placeholder="64 Bytes root expanded public key, e.g. 8680afdf7c21f5315d6a40183653c8def35679f8bae870687bc786df54317863c976554fbd99c9f63c7fcefb089f65c5db6a1af4429600384b1d9f2751cef942">
+            <input type="text" class="form-control" id="txtRootXpub" placeholder="64 Bytes root expanded public key, e.g. 8680afdf7c21f5315d6a40183653c8def35679f8bae870687bc786df54317863c976554fbd99c9f63c7fcefb089f65c5db6a1af4429600384b1d9f2751cef942" readonly>
           </div>
         </div>
         <!-- 根扩展私钥二维码 -->
@@ -114,20 +114,6 @@
             </label>
           </div>
         </div>
-        <!-- 地址路径 -->
-        <div class="form-group">
-          <label class="col-sm-2 control-label">Address Path</label>
-          <div class="col-sm-10">
-            <input type="text" class="form-control" id="txtAddressPath" placeholder="Address Path, e.g. ">
-          </div>
-        </div>
-        <!-- control program -->
-        <div class="form-group">
-          <label class="col-sm-2 control-label">Control Program</label>
-          <div class="col-sm-10">
-            <input type="text" class="form-control" id="txtControlProgram" placeholder="Control Program, e.g. 001431f2b90b469e89361225aae370f73e5473b9852b">
-          </div>
-        </div>
         <!-- 网络 -->
         <div class="form-group">
           <label class="col-sm-2 control-label">Network</label>
@@ -143,11 +129,25 @@
             </label>
           </div>
         </div>
+        <!-- 地址路径 -->
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Address Path</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="txtAddressPath" placeholder="Address Path, e.g. " readonly>
+          </div>
+        </div>
+        <!-- control program -->
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Control Program</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="txtControlProgram" placeholder="Control Program, e.g. 001431f2b90b469e89361225aae370f73e5473b9852b" readonly>
+          </div>
+        </div>
         <!-- 地址 -->
         <div class="form-group">
           <label class="col-sm-2 control-label">Address</label>
           <div class="col-sm-10">
-            <input type="text" class="form-control" id="txtAddress" placeholder="Address, e.g. bm1qx8etjz6xn6ynvy394t3hpae723emnpft3nrwej">
+            <input type="text" class="form-control" id="txtAddress" placeholder="Address, e.g. bm1qx8etjz6xn6ynvy394t3hpae723emnpft3nrwej" readonly>
           </div>
         </div>
         <!-- 根扩展私钥二维码 -->

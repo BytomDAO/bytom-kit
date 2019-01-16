@@ -22,6 +22,7 @@ from app.model.receiver import get_path_from_index
 from app.model.receiver import create_qrcode_base64
 from app.model.transaction import broadcast_transaction
 from app.model.key import create_new_key
+from app.model.receiver import create_new_address
 
 
 parser = reqparse.RequestParser()
@@ -211,3 +212,16 @@ class Create_New_Key(Resource):
 
     def post(self):
         return create_new_key()
+
+
+class Create_New_Address(Resource):
+
+    def post(self):
+        args = parser.parse_args()
+        xpub = args.get('xpub_str')
+        account_index = args.get('account_index_int')
+        address_index = args.get('address_index_int')
+        change = args.get('change_bool')
+        network = args.get('network_str')
+        response = create_new_address(xpub, account_index, address_index, change, network)
+        return response

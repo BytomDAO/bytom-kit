@@ -1,5 +1,5 @@
 import hashlib
-from app.model.key import *
+from app.model import key
 from app.model import segwit_addr
 import qrcode
 import pybase64
@@ -32,15 +32,19 @@ def get_path_from_index(account_index_int, address_index_int, change_bool):
     path_list = ['2c000000', '99000000']
     account_index_str = (account_index_int).to_bytes(4, byteorder='little').hex()
     path_list.append(account_index_str)
+    change_str = '0'
     if change_bool:
         branch_str = (1).to_bytes(4, byteorder='little').hex()
+        change_str = '1'
     else:
         branch_str = (0).to_bytes(4, byteorder='little').hex()
     path_list.append(branch_str)
     address_index_str = (address_index_int).to_bytes(4, byteorder='little').hex()
     path_list.append(address_index_str)
+    path_str = 'm/44/153/' + str(account_index_int) + '/' + change_str + '/' + str(address_index_int)
     return {
-        "path": path_list
+        "path": path_list,
+        "path_str": path_str
     }
 
 
@@ -76,8 +80,8 @@ def get_path_from_index(account_index_int, address_index_int, change_bool):
 #   control_program: 001431f2b90b469e89361225aae370f73e5473b9852b
 def create_P2WPKH_program(account_index_int, address_index_int, change_bool, xpub_str):
     path_list = get_path_from_index(account_index_int, address_index_int, change_bool)['path']
-    child_xpub_str = xpub_to_child_xpub(xpub_str, path_list)['child_xpub']
-    child_public_key_str = xpub_to_public_key(child_xpub_str)['public_key']
+    child_xpub_str = key.xpub_to_child_xpub(xpub_str, path_list)['child_xpub']
+    child_public_key_str = key.xpub_to_public_key(child_xpub_str)['public_key']
     child_public_key_byte = bytes.fromhex(child_public_key_str)
     
     ripemd160 = hashlib.new('ripemd160')
@@ -141,3 +145,45 @@ def create_qrcode_base64(s):
         "base64": base64_str
     }
 
+# create_new_address create address and address qrcode
+# test data 1:
+#   xpub_str: 8fde12d7c9d6b6cbfbf344edd42f2ed86ae6270b36bab714af5fd5bb3b54adcec4265f1de85ece50f17534e42016ee9404a11fec94ddfadd4a064d27ef3f3f4c
+#   account_index_int: 1
+#   address_index_int: 1
+#   change_bool: False
+#   network_str: solonet
+#   path: m/44/153/1/0/1
+#   control_program: 00147640f3c34fe4b2b298e54e54a4692a47ce47aa5e
+#   address: sm1qweq08s60ujet9x89fe22g6f2gl8y02j7lgr5v5
+#   address_base64: /9j/4AAQSkZJRgABAQ...
+# test data 2:
+#   xpub_str: 8fde12d7c9d6b6cbfbf344edd42f2ed86ae6270b36bab714af5fd5bb3b54adcec4265f1de85ece50f17534e42016ee9404a11fec94ddfadd4a064d27ef3f3f4c
+#   account_index_int: 12
+#   address_index_int: 3
+#   change_bool: True
+#   network_str: mainnet
+#   path: m/44/153/12/1/3
+#   control_program: 001458b1477abc46ef81905d25011d36389c0788984b
+#   address: bm1qtzc5w74ugmhcryzay5q36d3cnsrc3xztzw6u4y
+#   address_base64: /9j/4AAQSkZJRgABAQA...
+# test data 3:
+#   xpub_str: 8fde12d7c9d6b6cbfbf344edd42f2ed86ae6270b36bab714af5fd5bb3b54adcec4265f1de85ece50f17534e42016ee9404a11fec94ddfadd4a064d27ef3f3f4c
+#   account_index_int: 200
+#   address_index_int: 1
+#   change_bool: True
+#   network_str: mainnet
+#   path: m/44/153/200/1/1
+#   control_program: 00144e5c8757c612c21aa2a0c55f1f8e2ab57cfdefca
+#   address: bm1qfewgw47xztpp4g4qc403lr32k470mm724cphhp
+#   address_base64: /9j/4AAQSkZJRgABAQA...
+def create_new_address(xpub_str, account_index_int, address_index_int, change_bool, network_str):
+    path_str = get_path_from_index(account_index_int, address_index_int, change_bool)['path_str']
+    control_program_str = create_P2WPKH_program(account_index_int, address_index_int, change_bool, xpub_str)['control_program']
+    address_str = create_address(control_program_str, network_str)['address']
+    address_base64 = create_qrcode_base64(address_str)['base64']
+    return {
+        "path": path_str,
+        "control_program": control_program_str,
+        "address": address_str,
+        "address_base64": address_base64
+    }
