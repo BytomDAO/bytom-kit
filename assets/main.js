@@ -33,30 +33,42 @@ $(function(){
   // 生成新地址
   $('#btnCreateNewAddress').click(function(){
     console.log('创建新密钥');
+    var xpub_str = $('#txtXpub').val()
+    var account_index_int = $('#txtAccountIndex').val()
+    var address_index_int = $('#txtAddressIndex').val()
+    var change_bool = false
+    if ($("input[name='inlineRadioOptionsChange']:checked").val() == "true") {
+      change_bool = true
+    }
+    var network_str = $("input[name='inlineRadioOptionsNetwork']:checked").val()
     $.ajax({
       method: 'post',  //get or post
-      url: 'http://127.0.0.1:5000/api/v1/create_new_key',
-      data: {},
+      url: 'http://127.0.0.1:5000/api/v1/create_new_address',
+      data: {
+        "xpub_str": xpub_str,
+        "account_index_int": account_index_int,
+        "address_index_int": address_index_int,
+        "change_bool": change_bool,
+        "network_str": network_str
+      },
       dataType: 'json',
     }).done(function(data){
       console.log(data);
       layer.msg('创建成功')
-      $('#txtEntropy').val(data.entropy)
-      $('#txtMnemonics').val(data.mnemonic)
-      $('#txtSeed').val(data.seed)
-      $('#txtRootXprv').val(data.xprv)
-      $('#txtRootXpub').val(data.xpub)
-      $('#imgXprvQRCode').attr('src', 'data:image/jpg;base64,' + data.xprv_base64)
+      $('#txtAddressPath').val(data.path)
+      $('#txtControlProgram').val(data.control_program)
+      $('#txtAddress').val(data.address)
+      $('#imgAddressQRCode').attr('src', 'data:image/jpg;base64,' + data.address_base64)
     }).fail(function(err){
       layer.alert('创建失败' + err);
     });
   })
   // 清除地址
-  $('#btnResetReceiver').click(function(){
+  $('#btnResetAddress').click(function(){
     console.log('清除');
     $('#txtXpub').val('')
-    $('#txtAccountIndex').val('')
-    $('#txtAddressIndex').val('')
+    $('#txtAccountIndex').val('1')
+    $('#txtAddressIndex').val('1')
     $('#txtAddressPath').val('')
     $('#txtControlProgram').val('')
     $('#txtAddress').val('')
