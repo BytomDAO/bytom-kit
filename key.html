@@ -64,12 +64,12 @@
         <!-- 根扩展私钥二维码 -->
         <div class="form-group">
           <label class="col-sm-2 control-label">Xprv QR Code</label>
-          <img id="qrcode" width="200"  src="" alt="">
+          <img id="imgXprvQRCode" width="200"  src="" alt="">
         </div>
         <div class="form-group">
           <div class="col-sm-offset-2 col-sm-10">
             <a id="btnCreateNewKey" class="btn btn-primary">Create New Key</a> 
-            <a id="btnReset" class="btn btn-primary">Reset</a>
+            <a id="btnResetKey" class="btn btn-primary">Reset</a>
           </div>
         </div>
       </form>
@@ -77,11 +77,90 @@
   </div>
   <div class="panel panel-default sc-bd">
     <div class="panel-heading">
-      <h3 class="panel-title">Receiver </h3>
+      <h3 class="panel-title">Address </h3>
     </div>
     <div class="panel-body">
       <form class="form-horizontal">
-        
+        <!-- 根扩展公钥 -->
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Expanded Public Key</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="txtXpub" placeholder="64 Bytes expanded public key, e.g. 8680afdf7c21f5315d6a40183653c8def35679f8bae870687bc786df54317863c976554fbd99c9f63c7fcefb089f65c5db6a1af4429600384b1d9f2751cef942">
+          </div>
+        </div>
+        <!-- 账户索引 -->
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Account Index</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="txtAccountIndex" placeholder="Account Index, e.g. 1, 2, 3..." value="1">
+          </div>
+        </div>
+        <!-- 地址索引 -->
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Address Index</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="txtAddressIndex" placeholder="Address Index, e.g. 1, 2, 3..." value="1">
+          </div>
+        </div>
+        <!-- 找零 -->
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Change</label>
+          <div class="col-sm-10">
+            <label class="radio-inline">
+              <input type="radio" name="inlineRadioOptionsChange" id="inlineRadioChangeTrue" value="true"> True
+            </label>
+            <label class="radio-inline">
+              <input type="radio" name="inlineRadioOptionsChange" id="inlineRadioChangeFalse" value="false" checked="checked"> False
+            </label>
+          </div>
+        </div>
+        <!-- 地址路径 -->
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Address Path</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="txtAddressPath" placeholder="Address Path, e.g. ">
+          </div>
+        </div>
+        <!-- control program -->
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Control Program</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="txtControlProgram" placeholder="Control Program, e.g. 001431f2b90b469e89361225aae370f73e5473b9852b">
+          </div>
+        </div>
+        <!-- 网络 -->
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Network</label>
+          <div class="col-sm-10">
+            <label class="radio-inline">
+              <input type="radio" name="inlineRadioOptionsNetwork" id="inlineRadioMainet" value="mainnet"> Mainnet
+            </label>
+            <label class="radio-inline">
+              <input type="radio" name="inlineRadioOptionsNetwork" id="inlineRadioTestnet" value="testnet"> Testnet
+            </label>
+            <label class="radio-inline">
+              <input type="radio" name="inlineRadioOptionsNetwork" id="inlineRadioSolonet" value="solonet" checked="checked"> Solonet
+            </label>
+          </div>
+        </div>
+        <!-- 地址 -->
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Address</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="txtAddress" placeholder="Address, e.g. bm1qx8etjz6xn6ynvy394t3hpae723emnpft3nrwej">
+          </div>
+        </div>
+        <!-- 根扩展私钥二维码 -->
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Address QR Code</label>
+          <img id="imgAddressQRCode" width="200"  src="" alt="">
+        </div>
+        <div class="form-group">
+          <div class="col-sm-offset-2 col-sm-10">
+            <a id="btnCreateNewAddress" class="btn btn-primary">Create New Address</a> 
+            <a id="btnResetAddress" class="btn btn-primary">Reset</a>
+          </div>
+        </div>
       </form>
     </div>
   </div>
