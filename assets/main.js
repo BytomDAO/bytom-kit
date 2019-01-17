@@ -102,4 +102,39 @@ $(function(){
     $('#txtMessage').val('')
     $('#txtSignature').val('')
   })
+  // 验证签名
+  $('#btnVerifySignature').click(function(){
+    console.log('验证签名');
+    var xpub_str = $('#txtXpubVerify').val()
+    var message_str = $('#txtMessageVerify').val()
+    var signature_str = $('#txtSignatureVerify').val()
+    $.ajax({
+      method: 'post',  //get or post
+      url: 'http://127.0.0.1:5000/api/v1/xpub_verify',
+      data: {
+        "xpub_str": xpub_str,
+        "message_str": message_str,
+        "signature_str": signature_str
+      },
+      dataType: 'json',
+    }).done(function(data){
+      console.log(data);
+      layer.msg('验证成功')
+      if (data.result == true) {
+        $('#txtVerifyResult').val("True")
+      } else {
+        $('#txtVerifyResult').val("False")
+      }
+    }).fail(function(err){
+      layer.alert('创建失败' + err);
+    });
+  })
+  // 清除消息签名
+  $('#btnResetVerify').click(function(){
+    console.log('清除');
+    $('#txtXpubVerify').val('')
+    $('#txtMessageVerify').val('')
+    $('#txtSignatureVerify').val('')
+    $('#txtVerifyResult').val('')
+  })
 });

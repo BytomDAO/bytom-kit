@@ -382,7 +382,7 @@ def xprv_sign(xprv_str, message_str):
 #   signature_str: ab18f49b23d03295bc2a3f2a7d5bb53a2997bed733e1fc408b50ec834ae7e43f7da40fe5d9d50f6ef2d188e1d27f976aa2586cef1ba00dd098b5c9effa046306
 def xpub_verify(xpub_str, message_str, signature_str):
     result = False
-    result = verify(xpub_to_public_key(xpub_str)['public_key'], signature_str, message_str)
+    result = verify(xpub_to_public_key(xpub_str)['public_key'], signature_str, message_str)['result']
     return {
         "result": result
         }
