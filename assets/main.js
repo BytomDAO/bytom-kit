@@ -32,7 +32,7 @@ $(function(){
   })
   // 生成新地址
   $('#btnCreateNewAddress').click(function(){
-    console.log('创建新密钥');
+    console.log('创建新地址');
     var xpub_str = $('#txtXpub').val()
     var account_index_int = $('#txtAccountIndex').val()
     var address_index_int = $('#txtAddressIndex').val()
@@ -73,5 +73,33 @@ $(function(){
     $('#txtControlProgram').val('')
     $('#txtAddress').val('')
     $('#imgAddressQRCode').attr('src', 'data:image/jpg;base64,')
+  })
+  // 消息签名
+  $('#btnSignMessage').click(function(){
+    console.log('创建新签名');
+    var xprv_str = $('#txtXprv').val()
+    var message_str = $('#txtMessage').val()
+    $.ajax({
+      method: 'post',  //get or post
+      url: 'http://127.0.0.1:5000/api/v1/xprv_sign',
+      data: {
+        "xprv_str": xprv_str,
+        "message_str": message_str
+      },
+      dataType: 'json',
+    }).done(function(data){
+      console.log(data);
+      layer.msg('创建成功')
+      $('#txtSignature').val(data.signature)
+    }).fail(function(err){
+      layer.alert('创建失败' + err);
+    });
+  })
+  // 清除消息签名
+  $('#btnResetSign').click(function(){
+    console.log('清除');
+    $('#txtXprv').val('')
+    $('#txtMessage').val('')
+    $('#txtSignature').val('')
   })
 });
