@@ -18,7 +18,7 @@ def create_entropy():
         entropy_str += hex_str[num]
     return {
         "entropy": entropy_str
-        }
+    }
 
 
 # entropy_to_mnemonic create mnemonic from 128 bits entropy(the entropy_str length is 32)
@@ -62,7 +62,7 @@ def entropy_to_mnemonic(entropy_str):
         mnemonic_str += " "
     return {
         "mnemonic": mnemonic_str[:-1]
-        }
+    }
 
 
 # mnemonic_to_seed create seed from mnemonic
@@ -83,7 +83,7 @@ def mnemonic_to_seed(mnemonic_str):
     seed_str = pbkdf2.PBKDF2(password_str, salt_str, iterations=2048, digestmodule=hashlib.sha512, macmodule=hmac).hexread(64)
     return {
         "seed": seed_str
-        }
+    }
 
 
 # s_str must be >= 32 bytes long and gets rewritten in place.
@@ -116,7 +116,7 @@ def seed_to_root_xprv(seed_str):
     root_xprv_str = prune_root_scalar(hc_str[:64]).hex() + hc_str[64:]
     return {
         "root_xprv": root_xprv_str
-        }
+    }
 
 
 # xprv_to_xpub derives new xpub from xprv
@@ -144,7 +144,7 @@ def xprv_to_xpub(xprv_str):
     xpub_str = xpub.hex()
     return {
         "xpub": xpub_str
-        }
+    }
 
 
 # xprv_to_expanded_private_key create expanded private key from xprv
@@ -163,7 +163,7 @@ def xprv_to_expanded_private_key(xprv_str):
     expanded_private_key_str = xprv_str[:64] + hc_str[64:]
     return {
         "expanded_private_key": expanded_private_key_str
-        }
+    }
 
 
 # xpub_to_public_key create 32 bytes public key from xpub
@@ -182,7 +182,7 @@ def xpub_to_public_key(xpub_str):
     public_key_str = xpub_str[:64]
     return {
         "public_key": public_key_str
-        }
+    }
 
 
 def prune_intermediate_scalar(f):
@@ -248,7 +248,7 @@ def xprv_to_child_xprv(xprv_str, path_list):
     child_xprv_str = xprv_str
     return {
         "child_xprv": child_xprv_str
-        }
+    }
 
 
 # xpub_to_child_xpub create new xpub through the path
@@ -304,7 +304,7 @@ def xpub_to_child_xpub(xpub_str, path_list):
     child_xpub_str = xpub_str
     return {
         "child_xpub": child_xpub_str
-        }
+    }
 
 
 # xprv_sign sign message
@@ -357,7 +357,7 @@ def xprv_sign(xprv_str, message_str):
     signature_str = signature_bytes.hex()
     return {
         "signature": signature_str
-        }
+    }
 
 
 # xpub_verify verify signature
@@ -385,7 +385,7 @@ def xpub_verify(xpub_str, message_str, signature_str):
     result = verify(xpub_to_public_key(xpub_str)['public_key'], signature_str, message_str)['result']
     return {
         "result": result
-        }
+    }
 
 
 def create_new_key():

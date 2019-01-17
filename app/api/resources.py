@@ -13,7 +13,6 @@ from app.model.key import xpub_to_public_key
 from app.model.key import xpub_verify
 from app.model.key import xprv_sign
 from app.model.key import xprv_to_xpub
-from app.model.key import xprv_sign
 from app.model.key import xprv_to_child_xprv
 from app.model.key import xpub_to_child_xpub
 from app.model.receiver import create_P2WPKH_program

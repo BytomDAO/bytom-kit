@@ -89,10 +89,10 @@ $(function(){
       dataType: 'json',
     }).done(function(data){
       console.log(data);
-      layer.msg('创建成功')
+      layer.msg('签名成功')
       $('#txtSignature').val(data.signature)
     }).fail(function(err){
-      layer.alert('创建失败' + err);
+      layer.alert('签名失败' + err);
     });
   })
   // 清除消息签名
@@ -120,13 +120,9 @@ $(function(){
     }).done(function(data){
       console.log(data);
       layer.msg('验证成功')
-      if (data.result == true) {
-        $('#txtVerifyResult').val("True")
-      } else {
-        $('#txtVerifyResult').val("False")
-      }
+      $('#txtVerifyResult').val(data.result)
     }).fail(function(err){
-      layer.alert('创建失败' + err);
+      layer.alert('验证失败，请检查输入数据格式是否正确' + err);
     });
   })
   // 清除消息签名
