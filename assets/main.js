@@ -133,4 +133,28 @@ $(function(){
     $('#txtSignatureVerify').val('')
     $('#txtVerifyResult').val('')
   })
+  // 发送交易
+  $('#btnSubmitTransaction').click(function(){
+    console.log('验证签名');
+    var raw_transaction_str = $('#txtRawTransaction').val()
+    $.ajax({
+      method: 'post',  //get or post
+      url: 'http://127.0.0.1:5000/api/v1/submit_transaction',
+      data: {
+        "raw_transaction_str": raw_transaction_str
+      },
+      dataType: 'json',
+    }).done(function(data){
+      console.log(data);
+      layer.msg('发送成功')
+      $('#txtRawTransaction').val('')
+    }).fail(function(err){
+      layer.alert('发送失败，请检查输入数据格式是否正确' + err);
+    });
+  })
+  // 清除发送交易
+  $('#btnResetSubmitTransaction').click(function(){
+    console.log('清除');
+    $('#txtRawTransaction').val('')
+  })
 });

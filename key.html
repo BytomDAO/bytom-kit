@@ -181,7 +181,7 @@
         <div class="form-group">
           <label class="col-sm-2 control-label">Message</label>
           <div class="col-sm-10">
-            <input type="text" class="form-control" id="txtMessage" placeholder="Message, e.g. a6ce34eec332b32e42ef3407e052d64ac625da6f" >
+            <input type="text" class="form-control" id="txtMessage" placeholder="Message, e.g. a6ce34eec332b32e42ef3407e052d64ac625da6f" maxlength="10000">
           </div>
         </div>
         <!-- 签名 -->
@@ -217,7 +217,7 @@
         <div class="form-group">
           <label class="col-sm-2 control-label">Message</label>
           <div class="col-sm-10">
-            <input type="text" class="form-control" id="txtMessageVerify" placeholder="Message, e.g. a6ce34eec332b32e42ef3407e052d64ac625da6f" >
+            <input type="text" class="form-control" id="txtMessageVerify" placeholder="Message, e.g. a6ce34eec332b32e42ef3407e052d64ac625da6f" maxlength="10000">
           </div>
         </div>
         <!-- 签名 -->
@@ -238,6 +238,28 @@
           <div class="col-sm-offset-2 col-sm-10">
             <a id="btnVerifySignature" class="btn btn-primary">Verify Signature</a>
             <a id="btnResetVerify" class="btn btn-primary">Reset</a>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="panel panel-default sc-bd">
+    <div class="panel-heading">
+      <h3 class="panel-title">Submit Transaction </h3>
+    </div>
+    <div class="panel-body">
+      <form class="form-horizontal">
+        <!-- 签名好的交易信息 -->
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Raw Transaction</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="txtRawTransaction" placeholder="Raw Transaction, e.g. 070100010160015e0873eddd68c4ba07c9410984799928288ae771bdccc6d974e72c95727813461fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff8094ebdc030101160014052620b86a6d5e07311d5019dffa3864ccc8a6bd630240312a052f36efb9826aa1021ec91bc6f125dd07f9c4bff87014612069527e15246518806b654d57fff8b6fe91866a19d5a2fb63a5894335fce92a7b4a7fcd340720e87ca3acdebdcad9a1d0f2caecf8ce0dbfc73d060807a210c6f225488347961402013dffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff8082eee0020116001418028ef4f8b8c278907864a1977a5ee6707b2a6b00013cffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff80b8b872011600142935e4869d0317d9701c80a02ecf888143cb9dd200" maxlength="100000">
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="col-sm-offset-2 col-sm-10">
+            <a id="btnSubmitTransaction" class="btn btn-primary">Submit Transaction</a>
+            <a id="btnResetSubmitTransaction" class="btn btn-primary">Reset</a>
           </div>
         </div>
       </form>

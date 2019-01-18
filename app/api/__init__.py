@@ -18,7 +18,7 @@ from app.api.resources import Xpub_To_Child_Xpub
 from app.api.resources import Create_P2WPKH_Program
 from app.api.resources import Create_Address
 from app.api.resources import Get_Path_From_Index
-from app.api.resources import Broadcast_Transaction
+from app.api.resources import Submit_Transaction
 from app.api.resources import Create_QRcode_Base64
 from app.api.resources import Create_New_Key
 from app.api.resources import Create_New_Address
@@ -43,7 +43,7 @@ api.add_resource(Xpub_To_Child_Xpub, '/xpub_to_child_xpub')
 api.add_resource(Create_P2WPKH_Program, '/create_P2WPKH_program')
 api.add_resource(Create_Address, '/create_address')
 api.add_resource(Get_Path_From_Index, '/get_path_from_index')
-api.add_resource(Broadcast_Transaction, '/broadcast_transaction')
+api.add_resource(Submit_Transaction, '/submit_transaction')
 api.add_resource(Create_QRcode_Base64, '/create_qrcode_base64')
 api.add_resource(Create_New_Key, '/create_new_key')
 api.add_resource(Create_New_Address, '/create_new_address')

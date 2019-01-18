@@ -19,7 +19,7 @@ from app.model.receiver import create_P2WPKH_program
 from app.model.receiver import create_address
 from app.model.receiver import get_path_from_index
 from app.model.receiver import create_qrcode_base64
-from app.model.transaction import broadcast_transaction
+from app.model.transaction import submit_transaction
 from app.model.key import create_new_key
 from app.model.receiver import create_new_address
 
@@ -190,13 +190,13 @@ class Create_Address(Resource):
         address = create_address(control_program, network)
         return address
 
-class Broadcast_Transaction(Resource):
+class Submit_Transaction(Resource):
 
     def post(self):
         args = parser.parse_args()
         raw_transaction = args.get('raw_transaction_str')
         network = args.get('network_str')
-        response = broadcast_transaction(raw_transaction, network)
+        response = submit_transaction(raw_transaction, network)
         return response
 
 class Create_QRcode_Base64(Resource):
