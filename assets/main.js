@@ -137,11 +137,13 @@ $(function(){
   $('#btnSubmitTransaction').click(function(){
     console.log('验证签名');
     var raw_transaction_str = $('#txtRawTransaction').val()
+    var network_str = $("input[name='inlineRadioOptionsNetworkSubmitTx']:checked").val()
     $.ajax({
       method: 'post',  //get or post
       url: 'http://kit.blockmeta.com/api/v1/submit_transaction',
       data: {
-        "raw_transaction_str": raw_transaction_str
+        "raw_transaction_str": raw_transaction_str,
+        "network_str": network_str
       },
       dataType: 'json',
     }).done(function(data){
