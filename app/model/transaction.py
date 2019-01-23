@@ -24,3 +24,19 @@ def submit_transaction(raw_transaction_str, network_str):
     return {
         "response": response.text[:-1]
     }
+
+
+def decode_raw_transaction(raw_transaction_str):
+    raw_transaction_dict = {
+        "raw_transaction": raw_transaction_str
+    }
+    raw_transaction_json = json.dumps(raw_transaction_dict)
+    headers = {
+        "content-type": "application/json",
+        "accept": "application/json"
+    }
+    url = 'http://127.0.0.1:9888/decode-raw-transaction'
+    response = requests.post(url, headers=headers, data=raw_transaction_json)
+    return {
+        "response": response.text[:-1]
+    }

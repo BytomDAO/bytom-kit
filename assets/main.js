@@ -159,4 +159,29 @@ $(function(){
     console.log('清除');
     $('#txtRawTransaction').val('')
   })
+  // 解码原生交易信息
+  $('#btnDocodeRawTransaction').click(function(){
+    console.log('解码交易');
+    var raw_transaction_str = $('#txtRawHexTransaction').val()
+    $.ajax({
+      method: 'post',  //get or post
+      url: 'http://kit.blockmeta.com/api/v1/decode_raw_transaction',
+      data: {
+        "raw_transaction_str": raw_transaction_str
+      },
+      dataType: 'json',
+    }).done(function(data){
+      console.log(data);
+      layer.msg('解码成功')
+      $('#txtJsonTransaction').val(data.response)
+    }).fail(function(err){
+      layer.alert('解码失败，请检查输入数据格式是否正确' + err);
+    });
+  })
+  // 清除解码交易
+  $('#btnResetDecodeRawTransaction').click(function(){
+    console.log('清除');
+    $('#txtRawHexTransaction').val('')
+    $('#txtJsonTransaction').val('')
+  })
 });

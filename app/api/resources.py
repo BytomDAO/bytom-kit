@@ -22,6 +22,7 @@ from app.model.receiver import create_qrcode_base64
 from app.model.transaction import submit_transaction
 from app.model.key import create_new_key
 from app.model.receiver import create_new_address
+from app.model.transaction import decode_raw_transaction
 
 
 parser = reqparse.RequestParser()
@@ -223,4 +224,12 @@ class Create_New_Address(Resource):
         change = args.get('change_bool')
         network = args.get('network_str')
         response = create_new_address(xpub, account_index, address_index, change, network)
+        return response
+
+class Decode_Raw_Transaction(Resource):
+
+    def post(self):
+        args = parser.parse_args()
+        raw_transaction = args.get('raw_transaction_str')
+        response = decode_raw_transaction(raw_transaction)
         return response

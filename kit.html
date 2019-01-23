@@ -277,6 +277,35 @@
       </form>
     </div>
   </div>
+  <div class="panel panel-default sc-bd">
+    <div class="panel-heading">
+      <h3 class="panel-title">Decode Raw Transaction </h3>
+    </div>
+    <div class="panel-body">
+      <form class="form-horizontal">
+        <!-- 签名好的交易信息 -->
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Raw Transaction</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="txtRawHexTransaction" placeholder="Raw Hex Transaction, e.g. 070100010161015f28b7b53d8dc90006bf97e0a4eaae2a72ec3d869873188698b694beaf20789f21ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff8099c4d5990100011600149335b1cbd4a77b78e33315a0ed10a95b12e7ca48630240897e2d9d24a3b5faaed0579dee7597b401491595675f897504f8945b29d836235bd2fca72a3ad0cae814628973ebcd142d9d6cc92d0b2571b69e5370a98a340c208cb7fb3086f58db9a31401b99e8c658be66134fb9034de1d5c462679270b090702013effffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff80f9f8bc98010116001406ce4b689ba026ffd3a7ca65d1d059546d4b78a000013dffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff80c6868f01011600147929ef91997c827bebf60fa608f876ea27523c4700" maxlength="100000">
+          </div>
+        </div>
+        <!-- json格式交易 -->
+        <div class="form-group">
+          <label class="col-sm-2 control-label">JSON Format</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="txtJsonTransaction" placeholder="JSON Format Transaction" maxlength="100000" readonly>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="col-sm-offset-2 col-sm-10">
+            <a id="btnDocodeRawTransaction" class="btn btn-primary">Decode Transaction</a>
+            <a id="btnResetDecodeRawTransaction" class="btn btn-primary">Reset</a>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
 </body>
 
 </html>
