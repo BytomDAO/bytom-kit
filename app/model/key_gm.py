@@ -65,4 +65,21 @@ def get_gm_xprv(xprv_str):
         "expanded_private_key": expanded_private_key_str
     }
 
- 
+
+# get_gm_public_key create 33 bytes public key from xpub
+# xpub length is 65 bytes.
+# You can get more test data from: https://gist.github.com/zcc0721/e159677bf776fe0209bca5b890cb87c3
+# test data 1:
+#   xpub_str: 03c74f3a946940d43e0f8c6da40680c0078e6e1008ca6ea869d57536c31b7ede20adc168c3698fa538fa587c4e519d1eb7a2593f178bfe0c93890a0f09e1634607
+#   public_key_str: 03c74f3a946940d43e0f8c6da40680c0078e6e1008ca6ea869d57536c31b7ede20
+# test data 2:
+#   xpub_str: 02914d51fcc3b90a87ffe3424995a9db8757a9d67812edd85207c47edc9f7f34e368684ae4d706f68c710fe1dbd20d73a8faaaf34966678a5d58486ac193a851ca
+#   public_key_str: 02914d51fcc3b90a87ffe3424995a9db8757a9d67812edd85207c47edc9f7f34e3
+# test data 3:
+#   xpub_str: 03603b2eb079257513d253a92ad45ce5ef12cc285dd8c13fc77c95844468f5eb4482f33c577c3a71ac733136b17d68b65a184b225431ab658555735e436fdb13e6
+#   public_key_str: 03603b2eb079257513d253a92ad45ce5ef12cc285dd8c13fc77c95844468f5eb44
+def get_gm_public_key(xpub_str):
+    public_key_str = xpub_str[:66]
+    return {
+        "public_key": public_key_str
+    }

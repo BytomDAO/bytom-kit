@@ -26,6 +26,7 @@ from app.model.transaction import decode_raw_transaction
 from app.model.key_gm import get_gm_root_xprv
 from app.model.key_gm import get_gm_xpub
 from app.model.key_gm import get_gm_xprv
+from app.model.key_gm import get_gm_public_key
 
 
 parser = reqparse.RequestParser()
@@ -260,3 +261,11 @@ class Get_Gm_Xprv(Resource):
         xprv = args.get('xprv_str')
         xprv = get_gm_xprv(xprv)
         return xprv
+
+class Get_Gm_Public_Key(Resource):
+
+    def post(self):
+        args = parser.parse_args()
+        xpub = args.get('xpub_str')
+        public_key = get_gm_public_key(xpub)
+        return public_key
