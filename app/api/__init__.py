@@ -23,6 +23,7 @@ from app.api.resources import Create_QRcode_Base64
 from app.api.resources import Create_New_Key
 from app.api.resources import Create_New_Address
 from app.api.resources import Decode_Raw_Transaction
+from app.api.resources import Get_Gm_Root_Xprv
 
 blueprint = Blueprint('api', __name__, url_prefix='/api/v1')
 api = Api(blueprint)
@@ -49,3 +50,4 @@ api.add_resource(Create_QRcode_Base64, '/create_qrcode_base64')
 api.add_resource(Create_New_Key, '/create_new_key')
 api.add_resource(Create_New_Address, '/create_new_address')
 api.add_resource(Decode_Raw_Transaction, '/decode_raw_transaction')
+api.add_resource(Get_Gm_Root_Xprv, '/get_gm_root_xprv')

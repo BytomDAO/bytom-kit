@@ -23,6 +23,7 @@ from app.model.transaction import submit_transaction
 from app.model.key import create_new_key
 from app.model.receiver import create_new_address
 from app.model.transaction import decode_raw_transaction
+from app.model.key_gm import get_gm_root_xprv
 
 
 parser = reqparse.RequestParser()
@@ -233,3 +234,11 @@ class Decode_Raw_Transaction(Resource):
         raw_transaction = args.get('raw_transaction_str')
         response = decode_raw_transaction(raw_transaction)
         return response
+
+class Get_Gm_Root_Xprv(Resource):
+
+    def post(self):
+        args = parser.parse_args()
+        seed = args.get('seed_str')
+        root_xprv = get_gm_root_xprv(seed)
+        return root_xprv
