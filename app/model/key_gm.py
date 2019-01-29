@@ -1,5 +1,6 @@
 import hmac
 import hashlib
+from gmssl import sm2, func
 
 # get_gm_root_xprv create rootxprv from seed
 # seed_str length is 512 bits.
@@ -19,4 +20,27 @@ def get_gm_root_xprv(seed_str):
     root_xprv_str = hc_str
     return {
         "root_xprv": root_xprv_str
+    }
+
+# get_gm_xpub derives new xpub from xprv
+# xprv length is 64 bytes.
+# xpub length is 65 bytes.
+# You can get more test data from: https://gist.github.com/zcc0721/9e5761e6a924cce3aa7cf7f72721218a
+# test data 1:
+#   xprv_str: c003f4bcccf9ad6f05ad2c84fa5ff98430eb8e73de5de232bc29334c7d074759d513bc370335cac51d77f0be5dfe84de024cfee562530b4d873b5f5e2ff4f57c
+#   xpub_str: 02476044353971ae0ed41cba76f27d0bd2e09d09db5c238bb74f69569bf343f742d513bc370335cac51d77f0be5dfe84de024cfee562530b4d873b5f5e2ff4f57c
+# test data 2:
+#   xprv_str: 36667587de27eec684fc4b222276f22a24d9a82e947ee0119148bedd4dec461dd4e1b1d95dfb0f78896677ea1026af7510b41fabd3bd5771311c0cb6968337b2
+#   xpub_str: 0396a36cd902db56eca016c213a8ac25de35a7afd78061351f1898529f0956c22ed4e1b1d95dfb0f78896677ea1026af7510b41fabd3bd5771311c0cb6968337b2
+# test data 3:
+#   xprv_str: 74a49c698dbd3c12e36b0b287447d833f74f3937ff132ebff7054baa18623c35a705bb18b82e2ac0384b5127db97016e63609f712bc90e3506cfbea97599f46f
+#   xpub_str: 03cafbdedea4a639d31fe4c257f1bb58303359be1a00b9f90b5c605f57e4308ed1a705bb18b82e2ac0384b5127db97016e63609f712bc90e3506cfbea97599f46f
+def get_gm_xpub(xprv_str):
+    private_key_int = int(xprv_str[:64], 16)
+    sm2_crypt = sm2.CryptSM2(private_key=xprv_str[:64], public_key="")
+    public_key_str = sm2_crypt._kg(private_key_int, sm2.default_ecc_table['g'])
+    pc = '0' + str(int(public_key_str[-1], 16) % 2 + 2)
+    xpub_str = pc + public_key_str[:64] + xprv_str[64:]
+    return {
+        "xpub": xpub_str
     }

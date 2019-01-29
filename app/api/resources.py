@@ -24,6 +24,7 @@ from app.model.key import create_new_key
 from app.model.receiver import create_new_address
 from app.model.transaction import decode_raw_transaction
 from app.model.key_gm import get_gm_root_xprv
+from app.model.key_gm import get_gm_xpub
 
 
 parser = reqparse.RequestParser()
@@ -242,3 +243,11 @@ class Get_Gm_Root_Xprv(Resource):
         seed = args.get('seed_str')
         root_xprv = get_gm_root_xprv(seed)
         return root_xprv
+
+class Get_Gm_Xpub(Resource):
+
+    def post(self):
+        args = parser.parse_args()
+        xprv = args.get('xprv_str')
+        xpub = get_gm_xpub(xprv)
+        return xpub
