@@ -83,3 +83,43 @@ def get_gm_public_key(xpub_str):
     return {
         "public_key": public_key_str
     }
+
+
+# get_gm_child_xprv create new xprv through the path
+# xprv_str length is 64 bytes.
+# path_list item is hex string.
+# child_xprv length is 64 bytes.
+# You can get more test data from: https://gist.github.com/zcc0721/db45d25d3432806ff33dcd87f694588b
+# test data 1:
+#   xprv_str: 10fdbc41a4d3b8e5a0f50dd3905c1660e7476d4db3dbd9454fa4347500a633531c487e8174ffc0cfa76c3be6833111a9b8cd94446e37a76ee18bb21a7d6ea66b
+#   path_list: 010400000000000000
+#   path_list: 0100000000000000
+#   child_xprv_str: 042f319fc7ae020937c0191294f6298b07e0f2acd01621f3ba25b2edc51b5098fde8c077dc7110da22251db1779b9a36fd92acbf559ef6fb170126074453f0a2
+# test data 2:
+#   xprv_str: c003f4bcccf9ad6f05ad2c84fa5ff98430eb8e73de5de232bc29334c7d074759d513bc370335cac51d77f0be5dfe84de024cfee562530b4d873b5f5e2ff4f57c
+#   path_list: 00
+#   path_list: 00
+#   child_xprv_str: 838159f7bcad836cc0bb5727eb446e5b989c90dd6084c723746188e84f8405f2f305b60bd191053e84aac16a91380dd67889b203c3f920a5ef06b2cb03cc0ae7
+# test data 3:
+#   xprv_str: c003f4bcccf9ad6f05ad2c84fa5ff98430eb8e73de5de232bc29334c7d074759d513bc370335cac51d77f0be5dfe84de024cfee562530b4d873b5f5e2ff4f57c
+#   path_list: 010203
+#   path_list: 7906a1
+#   child_xprv_str: ff7fc1c5a34fbeb739f8ac77ea7728685e7a9c29048e16bde69112ecff4a9aad4f9ee5721fce2d638071bcc1e2ee7ba470cb49d6356fdcf24127a28c09558b55
+def get_gm_child_xprv(xprv_str, path_list):
+    for i in range(len(path_list)):
+        selector_bytes = bytes.fromhex(path_list[i])
+        xpub_str = get_gm_xpub(xprv_str)['xpub']
+        xpub_bytes = bytes.fromhex(xpub_str)
+        xprv_bytes = bytes.fromhex(xprv_str)
+        hc_bytes = hmac.HMAC(xpub_bytes[33:], b'N'+xpub_bytes[:33]+selector_bytes, digestmod=hashlib.sha512).digest()
+        left_int = int(hc_bytes[:32].hex(), 16)
+        private_key_int = int(xprv_bytes[:32].hex(), 16)
+        sm2_n_str = 'FFFFFFFEFFFFFFFFFFFFFFFFFFFFFFFF7203DF6B21C6052B53BBF40939D54123'
+        sm2_n_int = int(sm2_n_str, 16)
+        child_key_int = (left_int + private_key_int) % sm2_n_int
+        child_key_str = (child_key_int).to_bytes(32, byteorder='big').hex()
+        xprv_str = child_key_str + hc_bytes[32:].hex()
+    child_xprv_str = xprv_str
+    return {
+        "child_xprv": child_xprv_str
+    }
