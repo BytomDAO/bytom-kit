@@ -123,3 +123,45 @@ def get_gm_child_xprv(xprv_str, path_list):
     return {
         "child_xprv": child_xprv_str
     }
+
+def decompress_public_key(dec_pubkey_str):
+    sm2_crypt = sm2.CryptSM2(private_key="", public_key="")
+    sm2_p_int = int(sm2_crypt.ecc_table['p'], 16)
+    sm2_a_int = int(sm2_crypt.ecc_table['a'], 16)
+    sm2_b_int = int(sm2_crypt.ecc_table['b'], 16)
+    x = int(dec_pubkey_str[2:], 16)
+    x = x << 257
+    x = x % sm2_p_int
+    x3 = x ** 3
+    ax = sm2_a_int * x
+    y2 = x3 + ax + sm2_b_int
+
+
+
+# def get_gm_child_xpub(xpub_str, path_list):
+#     for i in range(len(path_list)):
+#         selector_bytes = bytes.fromhex(path_list[i])
+#         xpub_bytes = bytes.fromhex(xpub_str)
+#         hc_bytes = hmac.HMAC(xpub_bytes[33:], b'N'+xpub_bytes[:33]+selector_bytes, digestmod=hashlib.sha512).digest()
+#         left_int = int(hc_bytes[:32].hex(), 16)
+#         sm2_crypt = sm2.CryptSM2(private_key="", public_key="")
+#         public_key_str = sm2_crypt._kg(left_int, sm2.default_ecc_table['g'])
+#         child_key_point = sm2_crypt._add_point()
+
+#         f = hc_bytearr[:32]
+#         f = prune_intermediate_scalar(f)
+#         f = bytes(f)
+#         scalar = decodeint(f)
+#         F = scalarmultbase(scalar)
+
+#         P = decodepoint(xpub_bytes[:32])
+#         P = edwards_add(P, F)
+#         public_key = encodepoint(P)
+
+#         xpub_bytes = public_key[:32] + hc_bytes[32:]
+#         xpub_str = xpub_bytes.hex()
+
+#     child_xpub_str = xpub_str
+#     return {
+#         "child_xpub": child_xpub_str
+#     }
