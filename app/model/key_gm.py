@@ -129,7 +129,7 @@ def get_gm_child_xprv(xprv_str, path_list):
 
 # decompress_public_key calculate y 
 # dec_pubkey_str length is 33 bytes.
-# You can get more test data from: 
+# You can get more test data from: https://gist.github.com/zcc0721/e2cb1643e9580230354e3c11e99222b6
 # test data 1:
 #   xpub_str: 02e097442c49eccae999f7687e088c918838df8d804980a220dba6bd7a51258e76347a32ad977251122e50456dcfe155d80cbfa83186a64f7756f044a126e664ac
 #   y_str: f8ac4140ec52355bc699e3b21a87d7824db5443f33641aed14e2e603491b43b4
