@@ -1,6 +1,8 @@
 import hmac
 import hashlib
 from gmssl import sm2, func
+import random
+from app.model import pn
 
 # get_gm_root_xprv create rootxprv from seed
 # seed_str length is 512 bits.
@@ -124,44 +126,57 @@ def get_gm_child_xprv(xprv_str, path_list):
         "child_xprv": child_xprv_str
     }
 
+
+# decompress_public_key calculate y 
+# dec_pubkey_str length is 33 bytes.
+# You can get more test data from: 
+# test data 1:
+#   xpub_str: 02e097442c49eccae999f7687e088c918838df8d804980a220dba6bd7a51258e76347a32ad977251122e50456dcfe155d80cbfa83186a64f7756f044a126e664ac
+#   y_str: f8ac4140ec52355bc699e3b21a87d7824db5443f33641aed14e2e603491b43b4
+# test data 2:
+#   xpub_str: 02476044353971ae0ed41cba76f27d0bd2e09d09db5c238bb74f69569bf343f742d513bc370335cac51d77f0be5dfe84de024cfee562530b4d873b5f5e2ff4f57c
+#   y_str: 76d809326d28a80900db49341731ef43c2791d8ef34d98803252a47fbb0b4e96
+# test data 3:
+#   xpub_str: 03c74f3a946940d43e0f8c6da40680c0078e6e1008ca6ea869d57536c31b7ede20adc168c3698fa538fa587c4e519d1eb7a2593f178bfe0c93890a0f09e1634607
+#   y_str: 4c12dc51fed482f03b277163fe551178f5a7059e8384236c9e4e614b90afeee1
 def decompress_public_key(dec_pubkey_str):
-    sm2_crypt = sm2.CryptSM2(private_key="", public_key="")
-    sm2_p_int = int(sm2_crypt.ecc_table['p'], 16)
-    sm2_a_int = int(sm2_crypt.ecc_table['a'], 16)
-    sm2_b_int = int(sm2_crypt.ecc_table['b'], 16)
-    x = int(dec_pubkey_str[2:], 16)
-    x = x << 257
-    x = x % sm2_p_int
-    x3 = x ** 3
-    ax = sm2_a_int * x
-    y2 = x3 + ax + sm2_b_int
+    p_int = int('FFFFFFFEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF00000000FFFFFFFFFFFFFFFF', 16)
+    a_int = int('FFFFFFFEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF00000000FFFFFFFFFFFFFFFC', 16)
+    b_int = int('28E9FA9E9D9F5E344D5A9E4BCF6509A7F39789F515AB8F92DDBCBD414D940E93', 16)
+    x_int = int(dec_pubkey_str[2:66], 16)
+    ysq = (x_int **3 + a_int * x_int + b_int) % p_int
+    y1, y2 = pn.sqrt2(ysq, p_int)
+    if y1 & 1 == 1:
+        y1, y2 = y2, y1
+    if dec_pubkey_str[:2] == '02':
+        y = y1
+    else:
+        y = y2
+    y_str = (y).to_bytes(32, byteorder='big').hex()
+    return y_str
 
 
 
-# def get_gm_child_xpub(xpub_str, path_list):
-#     for i in range(len(path_list)):
-#         selector_bytes = bytes.fromhex(path_list[i])
-#         xpub_bytes = bytes.fromhex(xpub_str)
-#         hc_bytes = hmac.HMAC(xpub_bytes[33:], b'N'+xpub_bytes[:33]+selector_bytes, digestmod=hashlib.sha512).digest()
-#         left_int = int(hc_bytes[:32].hex(), 16)
-#         sm2_crypt = sm2.CryptSM2(private_key="", public_key="")
-#         public_key_str = sm2_crypt._kg(left_int, sm2.default_ecc_table['g'])
-#         child_key_point = sm2_crypt._add_point()
+# def gm_xprv_sign(xprv_str, message_str):
+#     sm2_crypt = sm2.CryptSM2(private_key=xprv_str[:64], public_key="")
+#     K = random.randint(0, 2**256)
+#     K_str = K.to_bytes(32, byteorder='big').hex()
+#     data = bytes.fromhex(message_str)
+#     sig = sm2_crypt.sign(data, K_str)
+#     return sig
+#     # print(sig)
+#     # xprv_str = get_gm_xprv(xprv_str)['expanded_private_key']
+#     # xprv_bytes = bytes.fromhex(xprv_str)
+#     # message_bytes = bytes.fromhex(message_str)
+#     # data_bytes = xprv_bytes[32:64]
 
-#         f = hc_bytearr[:32]
-#         f = prune_intermediate_scalar(f)
-#         f = bytes(f)
-#         scalar = decodeint(f)
-#         F = scalarmultbase(scalar)
 
-#         P = decodepoint(xpub_bytes[:32])
-#         P = edwards_add(P, F)
-#         public_key = encodepoint(P)
-
-#         xpub_bytes = public_key[:32] + hc_bytes[32:]
-#         xpub_str = xpub_bytes.hex()
-
-#     child_xpub_str = xpub_str
+# def gm_xpub_verify(xpub_str, message_str, signature_str):
+#     public_key = xpub_str[:66]
+#     result = False
+#     sm2_crypt = sm2.CryptSM2(private_key="", public_key=public_key)
+#     data = bytes.fromhex(message_str)
+#     result = sm2_crypt.verify(signature_str, data)
 #     return {
-#         "child_xpub": child_xpub_str
+#         "result": result
 #     }
