@@ -10,12 +10,8 @@ from app.model import receiver
 
 # create_key create 128 bits entropy
 def create_entropy():
-    hex_str = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"]
-    entropy_str = ""
-    for _ in range(32):
-        # create interger in range [1,15]
-        num = random.randint(0,15)
-        entropy_str += hex_str[num]
+    entropy = random.randint(0, 2**128)
+    entropy_str = entropy.to_bytes(16, byteorder='big').hex()
     return {
         "entropy": entropy_str
     }
