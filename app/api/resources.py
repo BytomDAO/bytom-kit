@@ -30,6 +30,7 @@ from app.model.key_gm import get_gm_public_key
 from app.model.key_gm import get_gm_child_xprv
 from app.model.key_gm import get_gm_child_xpub
 from app.model.key_gm import gm_xpub_verify
+from app.model.key_gm import gm_xprv_sign
 
 
 parser = reqparse.RequestParser()
@@ -300,3 +301,12 @@ class Gm_Xpub_Verify(Resource):
         signature = args.get('signature_str')
         result = gm_xpub_verify(xpub, message, signature)
         return result
+
+class Gm_Xprv_Sign(Resource):
+
+    def post(self):
+        args = parser.parse_args()
+        xprv = args.get('xprv_str')
+        message = args.get('message_str')
+        signature = gm_xprv_sign(xprv, message)
+        return signature

@@ -207,19 +207,38 @@ def get_gm_child_xpub(xpub_str, path_list):
     }
 
 
+# gm_xprv_sign verify signature
+# xprv_str length is 64 bytes.
+# xpub_str length is 65 bytes.
+# message_str length is variable.
+# signature_str length is 64 bytes.
+# You can get more test data from: https://gist.github.com/zcc0721/d2d11b4ae2937deb3a09bd4c00cfc1b4
+# test data 1:
+#   xprv_str: 36667587de27eec684fc4b222276f22a24d9a82e947ee0119148bedd4dec461dd4e1b1d95dfb0f78896677ea1026af7510b41fabd3bd5771311c0cb6968337b2
+#   xpub_str: 0396a36cd902db56eca016c213a8ac25de35a7afd78061351f1898529f0956c22ed4e1b1d95dfb0f78896677ea1026af7510b41fabd3bd5771311c0cb6968337b2
+#   message_str: 1246b84985e1ab5f83f4ec2bdf271114666fd3d9e24d12981a3c861b9ed523c6
+#   signature_str: 1cd9cebbc4771fe136c98101c80c37efbd0dc7bf0aef1bddf07b0c1c86e3746167cfab14f55720a1d7d00d16d5bf42769fff307bb6c3142dcd51e2a299f289ce
+#   result: True
+# test data 2:
+#   xprv_str: c003f4bcccf9ad6f05ad2c84fa5ff98430eb8e73de5de232bc29334c7d074759d513bc370335cac51d77f0be5dfe84de024cfee562530b4d873b5f5e2ff4f57c
+#   xpub_str: 02476044353971ae0ed41cba76f27d0bd2e09d09db5c238bb74f69569bf343f742d513bc370335cac51d77f0be5dfe84de024cfee562530b4d873b5f5e2ff4f57c
+#   message_str: 1234abcd
+#   signature_str: 7c61e3a3fc999dfdd88151d207758c8c1dd0bf6e1558088634471022c68512a94c0f94cab07c7ba2ca3c59cced8c6eedad1eaf10ffb481950b5aa7348a9f9030
+# test data 3:
+#   xprv_str: 74a49c698dbd3c12e36b0b287447d833f74f3937ff132ebff7054baa18623c35a705bb18b82e2ac0384b5127db97016e63609f712bc90e3506cfbea97599f46f
+#   xpub_str: 03cafbdedea4a639d31fe4c257f1bb58303359be1a00b9f90b5c605f57e4308ed1a705bb18b82e2ac0384b5127db97016e63609f712bc90e3506cfbea97599f46f
+#   message_str: ec684f
+#   signature_str: f065d15148087f4e4f936aca0dba5db6b331a72cfe905ef70b1b9f48797daaacfae38f24a39ce0daf02444885b72aa4969e4ebf044c330510cc2319a10dd3dd1
+def gm_xprv_sign(xprv_str, message_str):
+    sm2_crypt = sm2.CryptSM2(private_key=xprv_str[:64], public_key="")
+    K = random.randint(0, 2**256)
+    K_str = K.to_bytes(32, byteorder='big').hex()
+    data = bytes.fromhex(message_str)
+    sig = sm2_crypt.sign(data, K_str)
+    return {
+        "signature": sig
+    }
 
-# def gm_xprv_sign(xprv_str, message_str):
-#     sm2_crypt = sm2.CryptSM2(private_key=xprv_str[:64], public_key="")
-#     K = random.randint(0, 2**256)
-#     K_str = K.to_bytes(32, byteorder='big').hex()
-#     data = bytes.fromhex(message_str)
-#     sig = sm2_crypt.sign(data, K_str)
-#     return sig
-#     # print(sig)
-#     # xprv_str = get_gm_xprv(xprv_str)['expanded_private_key']
-#     # xprv_bytes = bytes.fromhex(xprv_str)
-#     # message_bytes = bytes.fromhex(message_str)
-#     # data_bytes = xprv_bytes[32:64]
 
 # gm_xpub_verify verify signature
 # xpub_str length is 65 bytes.
