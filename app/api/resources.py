@@ -28,6 +28,7 @@ from app.model.key_gm import get_gm_xpub
 from app.model.key_gm import get_gm_xprv
 from app.model.key_gm import get_gm_public_key
 from app.model.key_gm import get_gm_child_xprv
+from app.model.key_gm import get_gm_child_xpub
 
 
 parser = reqparse.RequestParser()
@@ -279,3 +280,12 @@ class Get_Gm_Child_Xprv(Resource):
         path = args.get('path_list')
         child_xprv = get_gm_child_xprv(xprv, path)
         return child_xprv
+
+class Get_Gm_Child_Xpub(Resource):
+
+    def post(self):
+        args = parser.parse_args()
+        xpub = args.get('xpub_str')
+        path = args.get('path_list')
+        child_xpub = get_gm_child_xpub(xpub, path)
+        return child_xpub

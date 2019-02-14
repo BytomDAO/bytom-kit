@@ -28,6 +28,7 @@ from app.api.resources import Get_Gm_Xpub
 from app.api.resources import Get_Gm_Xprv
 from app.api.resources import Get_Gm_Public_Key
 from app.api.resources import Get_Gm_Child_Xprv
+from app.api.resources import Get_Gm_Child_Xpub
 
 
 blueprint = Blueprint('api', __name__, url_prefix='/api/v1')
@@ -60,3 +61,4 @@ api.add_resource(Get_Gm_Xpub, '/get_gm_xpub')
 api.add_resource(Get_Gm_Xprv, '/get_gm_xprv')
 api.add_resource(Get_Gm_Public_Key, '/get_gm_public_key')
 api.add_resource(Get_Gm_Child_Xprv, '/get_gm_child_xprv')
+api.add_resource(Get_Gm_Child_Xpub, '/get_gm_child_xpub')

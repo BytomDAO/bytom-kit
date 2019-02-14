@@ -156,6 +156,57 @@ def decompress_public_key(dec_pubkey_str):
     return y_str
 
 
+# get_gm_child_xpub create new xpub through the path
+# xpub_str length is 65 bytes.
+# path_list item is hex string.
+# child_xpub length is 65 bytes.
+# You can get more test data from: https://gist.github.com/zcc0721/cc3eebe44dd4d0d613c29722c52f6e13
+# test data 1:
+#   xpub_str: 02e097442c49eccae999f7687e088c918838df8d804980a220dba6bd7a51258e76347a32ad977251122e50456dcfe155d80cbfa83186a64f7756f044a126e664ac
+#   path_list: 010400000000000000
+#   path_list: 0100000000000000
+#   child_xpub_str: 031b17412e15f1120527104ba0643baf33f801048cccbbed848c460881d764daa71c467a603109348cd52ce3404db12c4991e3d93727430457a0d483b08b53731f
+# test data 2:
+#   xpub_str: 02e097442c49eccae999f7687e088c918838df8d804980a220dba6bd7a51258e76347a32ad977251122e50456dcfe155d80cbfa83186a64f7756f044a126e664ac
+#   path_list: 00
+#   path_list: 00
+#   child_xpub_str: 02c616c84c8ad467f013ea6a7ae8f362b0944e0339a7ff844e0976f31ff83a9e7c9b353e3405fb6810167c105a98878d1ece351f4c4ee02b72c26afe56dd57074f
+# test data 3:
+#   xpub_str: 03603b2eb079257513d253a92ad45ce5ef12cc285dd8c13fc77c95844468f5eb4482f33c577c3a71ac733136b17d68b65a184b225431ab658555735e436fdb13e6
+#   path_list: 00010203
+#   child_xpub_str: 02d49feae4abd8e18b17e0393374b57413abfe451edbbe92c2a9fa6718078eafac854b0299bf682052e4a5783d71463571a5e403243e7ab9cf11826d282534b0f3
+# test data 4:
+#   xpub_str: 02e097442c49eccae999f7687e088c918838df8d804980a220dba6bd7a51258e76347a32ad977251122e50456dcfe155d80cbfa83186a64f7756f044a126e664ac
+#   path_list: 00010203
+#   path_list: 03ededed
+#   path_list: 123456
+#   child_xpub_str: 022a1e261ff45010b7107f621d9ad7db584322948d90e5042e07f2b143ec4a1bd4da193b6c9a88cf221769e16f090e20e46a465a624b9706b99720fe08135937a7
+# test data 5:
+#   xpub_str: 03603b2eb079257513d253a92ad45ce5ef12cc285dd8c13fc77c95844468f5eb4482f33c577c3a71ac733136b17d68b65a184b225431ab658555735e436fdb13e6
+#   path_list: 010203
+#   path_list: 7906a1
+#   child_xpub_str: 0344977d5e874e50f320d4616e452468bc98fad2f855c551d0aaaedb0e1ab67f0122b808dc54075b096ef54e3fd742f8a5fd459ebb0eea95349631b3a133089ef3
+def get_gm_child_xpub(xpub_str, path_list):
+    for i in range(len(path_list)):
+        selector_bytes = bytes.fromhex(path_list[i])
+        xpub_bytes = bytes.fromhex(xpub_str)
+        hc_str = hmac.HMAC(xpub_bytes[33:], b'N'+xpub_bytes[:33]+selector_bytes, digestmod=hashlib.sha512).hexdigest()
+        Il_int = int(hc_str[:64], 16)
+        sm2_crypt = sm2.CryptSM2(private_key="", public_key="")
+        public_key_str = sm2_crypt._kg(Il_int, sm2.default_ecc_table['g'])
+        par_public_key_str = xpub_str[2:66] + decompress_public_key(xpub_str[:66])
+        child_public_key_str = sm2_crypt._add_point(public_key_str, par_public_key_str)
+        child_public_key_str = sm2_crypt._convert_jacb_to_nor(child_public_key_str)
+        if int(child_public_key_str[:], 16) & 1 == 0:
+            xpub_str = "02" + child_public_key_str[:64] + hc_str[64:]
+        else:
+            xpub_str = "03" + child_public_key_str[:64] + hc_str[64:]
+    child_xpub_str = xpub_str
+    return {
+        "child_xpub": child_xpub_str
+    }
+
+
 
 # def gm_xprv_sign(xprv_str, message_str):
 #     sm2_crypt = sm2.CryptSM2(private_key=xprv_str[:64], public_key="")
