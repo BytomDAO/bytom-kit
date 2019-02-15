@@ -33,6 +33,7 @@ from app.model.key_gm import gm_xpub_verify
 from app.model.key_gm import gm_xprv_sign
 from app.model.receiver import get_gm_P2WPKH_program
 from app.model.receiver import get_gm_address
+from app.model.key_gm import get_gm_new_key
 
 
 parser = reqparse.RequestParser()
@@ -332,3 +333,8 @@ class Get_Gm_Address(Resource):
         network = args.get('network_str')
         address = get_gm_address(control_program, network)
         return address
+
+class Get_Gm_New_Key(Resource):
+
+    def post(self):
+        return get_gm_new_key()

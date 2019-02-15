@@ -3,6 +3,8 @@ import hashlib
 from gmssl import sm2, func
 import random
 from app.model import pn
+from app.model import key
+from app.model import receiver
 
 # get_gm_root_xprv create rootxprv from seed
 # seed_str length is 512 bits.
@@ -269,4 +271,21 @@ def gm_xpub_verify(xpub_str, message_str, signature_str):
     result = sm2_crypt.verify(signature_str, data)
     return {
         "result": result
+    }
+
+
+def get_gm_new_key():
+    entropy_str = key.create_entropy()['entropy']
+    mnemonic_str = key.entropy_to_mnemonic(entropy_str)['mnemonic']
+    seed_str = key.mnemonic_to_seed(mnemonic_str)['seed']
+    root_xprv_str = get_gm_root_xprv(seed_str)['root_xprv']
+    xpub_str = get_gm_xpub(root_xprv_str)['xpub']
+    xprv_base64 = receiver.create_qrcode_base64(root_xprv_str)['base64']
+    return {
+        "entropy": entropy_str,
+        "mnemonic": mnemonic_str,
+        "seed": seed_str,
+        "xprv": root_xprv_str,
+        "xpub": xpub_str,
+        "xprv_base64": xprv_base64
     }
