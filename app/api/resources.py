@@ -31,6 +31,7 @@ from app.model.key_gm import get_gm_child_xprv
 from app.model.key_gm import get_gm_child_xpub
 from app.model.key_gm import gm_xpub_verify
 from app.model.key_gm import gm_xprv_sign
+from app.model.receiver import get_gm_P2WPKH_program
 
 
 parser = reqparse.RequestParser()
@@ -310,3 +311,14 @@ class Gm_Xprv_Sign(Resource):
         message = args.get('message_str')
         signature = gm_xprv_sign(xprv, message)
         return signature
+
+class Get_Gm_P2WPKH_Program(Resource):
+
+    def post(self):
+        args = parser.parse_args()
+        account_index = args.get('account_index_int')
+        address_index = args.get('address_index_int')
+        change = args.get('change_bool')
+        xpub = args.get('xpub_str')
+        control_program = get_gm_P2WPKH_program(account_index, address_index, change, xpub)
+        return control_program

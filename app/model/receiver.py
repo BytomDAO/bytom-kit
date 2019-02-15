@@ -1,5 +1,6 @@
 import hashlib
 from app.model import key
+from app.model import key_gm
 from app.model import segwit_addr
 import qrcode
 import pybase64
@@ -84,6 +85,51 @@ def create_P2WPKH_program(account_index_int, address_index_int, change_bool, xpu
     child_public_key_str = key.xpub_to_public_key(child_xpub_str)['public_key']
     child_public_key_byte = bytes.fromhex(child_public_key_str)
     
+    ripemd160 = hashlib.new('ripemd160')
+    ripemd160.update(child_public_key_byte)
+    public_key_hash_str = ripemd160.hexdigest()
+    control_program_str = '0014' + public_key_hash_str
+    return {
+        "control_program": control_program_str
+    }
+
+
+# get_gm_P2WPKH_program create control program
+# You can get more test data from: https://gist.github.com/zcc0721/5b74b89cae9d75f752a3d2aa9086b9e6
+# Please attention:
+#   account_index_int >= 1
+#   address_index_int >= 1
+#   change_bool: true or false
+# test data 1:
+#   account_index_int: 1
+#   address_index_int: 1
+#   change_bool: false
+#   xpub_str: 03c74f3a946940d43e0f8c6da40680c0078e6e1008ca6ea869d57536c31b7ede20adc168c3698fa538fa587c4e519d1eb7a2593f178bfe0c93890a0f09e1634607
+#   control_program_str: 001434ca9c0cd289ecb8e899f1bdc0e9470442eae367
+# test data 2:
+#   account_index_int: 1
+#   address_index_int: 1
+#   change_bool: true
+#   xpub_str: 03c74f3a946940d43e0f8c6da40680c0078e6e1008ca6ea869d57536c31b7ede20adc168c3698fa538fa587c4e519d1eb7a2593f178bfe0c93890a0f09e1634607
+#   control_program: 0014ee20c5dfb6730d9abd8bf9c5516b8710bc118271
+# test data 3:
+#   account_index_int: 1
+#   address_index_int: 17
+#   change_bool: true
+#   xpub_str: 02914d51fcc3b90a87ffe3424995a9db8757a9d67812edd85207c47edc9f7f34e368684ae4d706f68c710fe1dbd20d73a8faaaf34966678a5d58486ac193a851ca
+#   control_program: 00149441d8a2e415c63c579d7998563472c1a7c4df2f
+# test data 4:
+#   account_index_int: 33
+#   address_index_int: 44
+#   change_bool: true
+#   xpub_str: 03603b2eb079257513d253a92ad45ce5ef12cc285dd8c13fc77c95844468f5eb4482f33c577c3a71ac733136b17d68b65a184b225431ab658555735e436fdb13e6
+#   control_program: 0014ac49fa87604998fb0ff9d5f83c6c8e803ca84de2
+def get_gm_P2WPKH_program(account_index_int, address_index_int, change_bool, xpub_str):
+    path_list = get_path_from_index(account_index_int, address_index_int, change_bool)['path']
+    child_xpub_str = key_gm.get_gm_child_xpub(xpub_str, path_list)['child_xpub']
+    child_public_key_str = key_gm.get_gm_public_key(child_xpub_str)['public_key']
+    child_public_key_byte = bytes.fromhex(child_public_key_str)
+
     ripemd160 = hashlib.new('ripemd160')
     ripemd160.update(child_public_key_byte)
     public_key_hash_str = ripemd160.hexdigest()
