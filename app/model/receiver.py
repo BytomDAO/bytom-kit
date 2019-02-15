@@ -180,6 +180,38 @@ def create_address(control_program_str, network_str):
         "address": address_str
     }
 
+
+# get_gm_address create address
+# You can get more test data from: https://gist.github.com/zcc0721/58ff3b33c54616c289dd0b14f75d316c
+# Please attention:
+#   network_str: gm_testnet/gm_solonet
+# test data 1:
+#   control_program_str: 0014d234314ea1533dee584417ecb922f904b8dd6c6b
+#   network_str: gm_testnet
+#   address_str: gm1q6g6rzn4p2v77ukzyzlktjgheqjud6mrtj2c2ef
+# test data 2:
+#   control_program_str: 0014d234314ea1533dee584417ecb922f904b8dd6c6b
+#   network_str: gm_solonet
+#   address_str: sm1q6g6rzn4p2v77ukzyzlktjgheqjud6mrtm7srev
+# test data 3:
+#   control_program_str: 0014eefb8d0688d7960dfbd79bb3aa1bcaa3ec34415d
+#   network_str: gm_testnet
+#   address_str: gm1qamac6p5g67tqm77hnwe65x7250krgs2ay6dmr3
+# test data 4:
+#   control_program_str: 0014eefb8d0688d7960dfbd79bb3aa1bcaa3ec34415d
+#   network_str: gm_solonet
+#   address_str: sm1qamac6p5g67tqm77hnwe65x7250krgs2adw9jr5
+def get_gm_address(control_program_str, network_str):
+    public_key_hash_str = control_program_str[4:]
+    if network_str == 'gm_testnet':
+        hrp = 'gm'
+    else:
+        hrp = 'sm'
+    address_str = segwit_addr.encode(hrp, 0, bytes.fromhex(public_key_hash_str))
+    return {
+        "address": address_str
+    }
+
 # create_qrcode_base64 create qrcode, then encode it to base64
 # type(s) is str
 def create_qrcode_base64(s):

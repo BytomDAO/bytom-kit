@@ -32,6 +32,7 @@ from app.model.key_gm import get_gm_child_xpub
 from app.model.key_gm import gm_xpub_verify
 from app.model.key_gm import gm_xprv_sign
 from app.model.receiver import get_gm_P2WPKH_program
+from app.model.receiver import get_gm_address
 
 
 parser = reqparse.RequestParser()
@@ -322,3 +323,12 @@ class Get_Gm_P2WPKH_Program(Resource):
         xpub = args.get('xpub_str')
         control_program = get_gm_P2WPKH_program(account_index, address_index, change, xpub)
         return control_program
+
+class Get_Gm_Address(Resource):
+
+    def post(self):
+        args = parser.parse_args()
+        control_program = args.get('control_program_str')
+        network = args.get('network_str')
+        address = get_gm_address(control_program, network)
+        return address

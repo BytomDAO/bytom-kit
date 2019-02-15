@@ -32,6 +32,7 @@ from app.api.resources import Get_Gm_Child_Xpub
 from app.api.resources import Gm_Xpub_Verify
 from app.api.resources import Gm_Xprv_Sign
 from app.api.resources import Get_Gm_P2WPKH_Program
+from app.api.resources import Get_Gm_Address
 
 
 blueprint = Blueprint('api', __name__, url_prefix='/api/v1')
@@ -68,3 +69,4 @@ api.add_resource(Get_Gm_Child_Xpub, '/get_gm_child_xpub')
 api.add_resource(Gm_Xpub_Verify, '/gm_xpub_verify')
 api.add_resource(Gm_Xprv_Sign, '/gm_xprv_sign')
 api.add_resource(Get_Gm_P2WPKH_Program, '/get_gm_P2WPKH_program')
+api.add_resource(Get_Gm_Address, '/get_gm_address')
