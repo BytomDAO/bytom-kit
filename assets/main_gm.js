@@ -4,7 +4,7 @@ $(function(){
     console.log('创建新密钥');
     $.ajax({
       method: 'post',  //get or post
-      url: 'http://127.0.0.1:5000/api/v1/get_gm_new_key',
+      url: 'http://kit.blockmeta.com/api/v1/get_gm_new_key',
       data: {},
       dataType: 'json',
     }).done(function(data){
@@ -43,7 +43,7 @@ $(function(){
     var network_str = $("input[name='inlineRadioOptionsNetwork']:checked").val()
     $.ajax({
       method: 'post',  //get or post
-      url: 'http://127.0.0.1:5000/api/v1/get_gm_new_address',
+      url: 'http://kit.blockmeta.com/api/v1/get_gm_new_address',
       data: {
         "xpub_str": xpub_str,
         "account_index_int": account_index_int,
@@ -81,7 +81,7 @@ $(function(){
     var message_str = $('#txtMessage').val()
     $.ajax({
       method: 'post',  //get or post
-      url: 'http://kit.blockmeta.com/api/v1/xprv_sign',
+      url: 'http://kit.blockmeta.com/api/v1/gm_xprv_sign',
       data: {
         "xprv_str": xprv_str,
         "message_str": message_str
@@ -110,7 +110,7 @@ $(function(){
     var signature_str = $('#txtSignatureVerify').val()
     $.ajax({
       method: 'post',  //get or post
-      url: 'http://kit.blockmeta.com/api/v1/xpub_verify',
+      url: 'http://kit.blockmeta.com/api/v1/gm_xpub_verify',
       data: {
         "xpub_str": xpub_str,
         "message_str": message_str,
