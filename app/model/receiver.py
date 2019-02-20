@@ -212,6 +212,7 @@ def get_gm_address(control_program_str, network_str):
         "address": address_str
     }
 
+
 # create_qrcode_base64 create qrcode, then encode it to base64
 # type(s) is str
 def create_qrcode_base64(s):
@@ -222,6 +223,7 @@ def create_qrcode_base64(s):
     return {
         "base64": base64_str
     }
+
 
 # create_new_address create address and address qrcode
 # test data 1:
@@ -258,6 +260,47 @@ def create_new_address(xpub_str, account_index_int, address_index_int, change_bo
     path_str = get_path_from_index(account_index_int, address_index_int, change_bool)['path_str']
     control_program_str = create_P2WPKH_program(account_index_int, address_index_int, change_bool, xpub_str)['control_program']
     address_str = create_address(control_program_str, network_str)['address']
+    address_base64 = create_qrcode_base64(address_str)['base64']
+    return {
+        "path": path_str,
+        "control_program": control_program_str,
+        "address": address_str,
+        "address_base64": address_base64
+    }
+
+
+# get_gm_new_address create address and address qrcode
+# test data 1:
+#   xpub_str: 0269ed53316c1ab5e3b3aa7c1ac3023e250e92a8b1495e1b88fe9564c1c6a49aaeabe1954985189c598214b56563a175fa843e091c9bf941f34a479c8121b196
+#   account_index_int: 1
+#   address_index_int: 1
+#   change_bool: False
+#   network_str: solonet
+#   path: m/44/153/1/0/1
+#   control_program: 00147a9db32f2059c9afc606525a826cd26715364841
+#   address: sm1q02wmxteqt8y6l3sx2fdgymxjvu2nvjzpxgal3p
+# test data 2:
+#   xpub_str: 0254d4f8377fa9cb7839e9525503ff2aa471a82042678082cf45e497362a1dd0e630dee82c0ce53458beafd257852739ab304ca38463ff23f89aa5ee19bc9312
+#   account_index_int: 12
+#   address_index_int: 3
+#   change_bool: True
+#   network_str: testnet
+#   path: m/44/153/12/1/3
+#   control_program: 001443419a20a0ca857c263a871136b64afea3a1cbf3
+#   address: gm1qgdqe5g9qe2zhcf36sugnddj2l636rjln0n98yq
+# test data 3:
+#   xpub_str: 03c8267b52c3918dd8714a30415460b5166f1b3e692b129121787d5bec86e6f57a23f928ec780dcadec36e17d19e46cfb20031c4bc5da26d6d9162f16c2e72da71
+#   account_index_int: 200
+#   address_index_int: 1
+#   change_bool: True
+#   network_str: testnet
+#   path: m/44/153/200/1/1
+#   control_program: 001438b8ad08da405b7565258f2ab94437384d4bdb3c
+#   address: gm1q8zu26zx6gpdh2ef93u4tj3ph8px5hkeur9l3x5
+def get_gm_new_address(xpub_str, account_index_int, address_index_int, change_bool, network_str):
+    path_str = get_path_from_index(account_index_int, address_index_int, change_bool)['path_str']
+    control_program_str = create_P2WPKH_program(account_index_int, address_index_int, change_bool, xpub_str)['control_program']
+    address_str = get_gm_address(control_program_str, network_str)['address']
     address_base64 = create_qrcode_base64(address_str)['base64']
     return {
         "path": path_str,

@@ -43,7 +43,7 @@ $(function(){
     var network_str = $("input[name='inlineRadioOptionsNetwork']:checked").val()
     $.ajax({
       method: 'post',  //get or post
-      url: 'http://kit.blockmeta.com/api/v1/create_new_address',
+      url: 'http://127.0.0.1:5000/api/v1/get_gm_new_address',
       data: {
         "xpub_str": xpub_str,
         "account_index_int": account_index_int,
