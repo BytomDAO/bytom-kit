@@ -1,6 +1,7 @@
 from flask import Flask
 from app import api
 from app.config import config
+from flask_cors import CORS
 # from app.extensions import db
 
 
@@ -9,6 +10,7 @@ def create_app(config_name=None):
     """
     app = Flask('app')
 
+    CORS(app)
     configure_app(app, config_name)
     configure_extensions(app)
     register_blueprints(app)
