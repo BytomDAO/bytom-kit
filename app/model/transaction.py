@@ -40,3 +40,41 @@ def decode_raw_transaction(raw_transaction_str):
     return {
         "response": response.text[:-1]
     }
+
+def decode_raw_tx(raw_tx_str):
+    tx_fee = 0
+    tx_input = {
+        "address": "",
+        "amount": 0,
+        "asset_definition": {},
+        "asset_id": "",
+        "control_program": "",
+        "input_id": "",
+        "spend_output_id": "",
+        "type": "",
+        "witness_arguments": []
+    }
+    tx_output = {
+        "address": "",
+        "amount": 0,
+        "asset_definition": {},
+        "asset_id": "",
+        "control_program": "",
+        "id": "",
+        "position": 0,
+        "type": ""
+    }
+    tx = {
+        "fee": tx_fee,
+        "inputs": [
+            tx_input
+        ]
+        "outputs": [
+            tx_output
+        ]
+        "size": len(raw_tx_str) // 2,
+        "time_range": 0,
+        "tx_id":
+    }
+    size = len(raw_tx_str) // 2
+    
