@@ -58,27 +58,6 @@ def get_uvarint(uvarint_str):
 
 
 def decode_raw_tx(raw_tx_str, network_str):
-    tx_input = {
-        "address": "",
-        "amount": 0,
-        "asset_definition": {},
-        "asset_id": "",
-        "control_program": "",
-        "input_id": "",
-        "spend_output_id": "",
-        "type": "",
-        "witness_arguments": []
-    }
-    tx_output = {
-        "address": "",
-        "amount": 0,
-        "asset_definition": {},
-        "asset_id": "",
-        "control_program": "",
-        "id": "",
-        "position": 0,
-        "type": ""
-    }
     tx = {
         "fee": 0,
         "inputs": [],
@@ -88,6 +67,7 @@ def decode_raw_tx(raw_tx_str, network_str):
         "tx_id": "",
         "version": 0
     }
+    tx['fee'] = 0
     tx['size'] = len(raw_tx_str) // 2
     length = 0
     offset = 2
@@ -98,6 +78,17 @@ def decode_raw_tx(raw_tx_str, network_str):
     tx_input_amount, length = get_uvarint(raw_tx_str[offset:offset+8])
     offset = offset + 2 * length
     for _ in range(tx_input_amount):
+        tx_input = {
+            "address": "",
+            "amount": 0,
+            "asset_definition": {},
+            "asset_id": "",
+            "control_program": "",
+            "input_id": "",
+            "spend_output_id": "",
+            "type": "",
+            "witness_arguments": []
+        }
         _, length = get_uvarint(raw_tx_str[offset:offset+16])
         offset = offset + 2 * length
         _, length = get_uvarint(raw_tx_str[offset:offset+16])
@@ -116,6 +107,7 @@ def decode_raw_tx(raw_tx_str, network_str):
             offset += 64
             tx_input['amount'], length = get_uvarint(raw_tx_str[offset:offset+16])
             offset = offset + 2 * length
+            tx['fee'] += tx_input['amount']
             _, length = get_uvarint(raw_tx_str[offset:offset+16])
             offset = offset + 2 * length
             _, length = get_uvarint(raw_tx_str[offset:offset+16])
@@ -138,4 +130,37 @@ def decode_raw_tx(raw_tx_str, network_str):
             tx['inputs'].append(tx_input)
         elif input_type == 2:
             pass
+    tx_output_amount, length = get_uvarint(raw_tx_str[offset:offset+16])
+    offset = offset + 2 * length
+    for i in range(tx_output_amount):
+        tx_output = {
+            "address": "",
+            "amount": 0,
+            "asset_definition": {},
+            "asset_id": "",
+            "control_program": "",
+            "id": "",
+            "position": 0,
+            "type": ""
+        }
+        tx_output['position'] = i
+        _, length = get_uvarint(raw_tx_str[offset:offset+16])
+        offset = offset + 2 * length
+        _, length = get_uvarint(raw_tx_str[offset:offset+16])
+        offset = offset + 2 * length
+        tx_output['asset_id'] = raw_tx_str[offset:offset+64]
+        offset = offset + 64
+        tx_output['amount'], length = get_uvarint(raw_tx_str[offset:offset+16])
+        offset = offset + 2 * length
+        tx['fee'] -= tx_output['amount']
+        _, length = get_uvarint(raw_tx_str[offset:offset+16])
+        offset = offset + 2 * length
+        control_program_length, length = get_uvarint(raw_tx_str[offset:offset+16])
+        offset = offset + 2 * length
+        tx_output['control_program'] = raw_tx_str[offset:offset+2*control_program_length]
+        offset = offset + 2 * control_program_length
+        tx_output['address'] = receiver.create_address(tx_output['control_program'], network_str)['address']
+        _, length = get_uvarint(raw_tx_str[offset:offset+16])
+        offset = offset + 2 * length
+        tx['outputs'].append(tx_output)
     return tx
