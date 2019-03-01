@@ -35,6 +35,7 @@ from app.model.receiver import get_gm_P2WPKH_program
 from app.model.receiver import get_gm_address
 from app.model.key_gm import get_gm_new_key
 from app.model.receiver import get_gm_new_address
+from app.model.transaction import decode_raw_tx
 
 
 parser = reqparse.RequestParser()
@@ -351,3 +352,12 @@ class Get_Gm_New_Address(Resource):
         network = args.get('network_str')
         response = get_gm_new_address(xpub, account_index, address_index, change, network)
         return response
+
+class Decode_Raw_Tx(Resource):
+
+    def post(self):
+        args = parser.parse_args()
+        network = args.get('network_str')
+        raw_transaction = args.get('raw_transaction_str')
+        tx = decode_raw_tx(raw_transaction, network)
+        return tx

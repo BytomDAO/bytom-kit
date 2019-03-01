@@ -1,5 +1,6 @@
 import requests
 import json
+from app.model import receiver
 
 # submit_transaction broadcast raw transaction
 # raw_transaction_str is signed transaction,
@@ -56,49 +57,85 @@ def get_uvarint(uvarint_str):
         i += 1
 
 
-# def decode_raw_tx(raw_tx_str):
-#     tx_input = {
-#         "address": "",
-#         "amount": 0,
-#         "asset_definition": {},
-#         "asset_id": "",
-#         "control_program": "",
-#         "input_id": "",
-#         "spend_output_id": "",
-#         "type": "",
-#         "witness_arguments": []
-#     }
-#     tx_output = {
-#         "address": "",
-#         "amount": 0,
-#         "asset_definition": {},
-#         "asset_id": "",
-#         "control_program": "",
-#         "id": "",
-#         "position": 0,
-#         "type": ""
-#     }
-#     tx = {
-#         "fee": 0,
-#         "inputs": [],
-#         "outputs": [],
-#         "size": 0,
-#         "time_range": 0,
-#         "tx_id": "",
-#         "version": 0
-#     }
-#     version = int(raw_tx_str[2:4], 16)
-#     time_range = int(raw_tx_str[4:6], 16)
-#     tx_input_amount = int(raw_tx_str[6:8], 16)
-#     tx_input_version = int(raw_tx_str[8:10], 16)
-#     tx_input_length = int(raw_tx_str[10:12], 16)
-#     tx_input_type = int(raw_tx_str[12:14], 16)
-#     tx_input_data_spend_commit_length = int(raw_tx_str[14:16], 16)
-#     tx_input_source_id = raw_tx_str[16:80]
-#     tx_input_asset_id = raw_tx_str[80:144]
-    
-
-#     # for i in range(tx_input_amount):
-
-#     return tx
-
+def decode_raw_tx(raw_tx_str, network_str):
+    tx_input = {
+        "address": "",
+        "amount": 0,
+        "asset_definition": {},
+        "asset_id": "",
+        "control_program": "",
+        "input_id": "",
+        "spend_output_id": "",
+        "type": "",
+        "witness_arguments": []
+    }
+    tx_output = {
+        "address": "",
+        "amount": 0,
+        "asset_definition": {},
+        "asset_id": "",
+        "control_program": "",
+        "id": "",
+        "position": 0,
+        "type": ""
+    }
+    tx = {
+        "fee": 0,
+        "inputs": [],
+        "outputs": [],
+        "size": 0,
+        "time_range": 0,
+        "tx_id": "",
+        "version": 0
+    }
+    tx['size'] = len(raw_tx_str) // 2
+    length = 0
+    offset = 2
+    tx['version'], length = get_uvarint(raw_tx_str[offset:offset+16])
+    offset = offset + 2 * length
+    tx['time_range'], length = get_uvarint(raw_tx_str[offset:offset+16])
+    offset = offset + 2 * length
+    tx_input_amount, length = get_uvarint(raw_tx_str[offset:offset+8])
+    offset = offset + 2 * length
+    for _ in range(tx_input_amount):
+        _, length = get_uvarint(raw_tx_str[offset:offset+16])
+        offset = offset + 2 * length
+        _, length = get_uvarint(raw_tx_str[offset:offset+16])
+        offset = offset + 2 * length
+        input_type = int(raw_tx_str[offset:offset+2], 16)
+        offset += 2
+        if input_type == 0:
+            pass
+        elif input_type == 1:
+            tx_input['type'] = "spend"
+            _, length = get_uvarint(raw_tx_str[offset:offset+16])
+            offset = offset + 2 * length
+            source_id = raw_tx_str[offset:offset+64]
+            offset += 64
+            tx_input['asset_id'] = raw_tx_str[offset:offset+64]
+            offset += 64
+            tx_input['amount'], length = get_uvarint(raw_tx_str[offset:offset+16])
+            offset = offset + 2 * length
+            _, length = get_uvarint(raw_tx_str[offset:offset+16])
+            offset = offset + 2 * length
+            _, length = get_uvarint(raw_tx_str[offset:offset+16])
+            offset = offset + 2 * length
+            control_program_length, length = get_uvarint(raw_tx_str[offset:offset+16])
+            offset = offset + 2 * length
+            tx_input['control_program'] = raw_tx_str[offset:offset+2*control_program_length]
+            offset = offset + 2 * control_program_length
+            tx_input['address'] = receiver.create_address(tx_input['control_program'], network_str)['address']
+            _, length = get_uvarint(raw_tx_str[offset:offset+16])
+            offset = offset + 2 * length
+            witness_arguments_amount, length = get_uvarint(raw_tx_str[offset:offset+16])
+            offset = offset + 2 * length
+            for _ in range(witness_arguments_amount):
+                argument_length, length = get_uvarint(raw_tx_str[offset:offset+16])
+                offset = offset + 2 * length
+                argument = raw_tx_str[offset:offset+2*argument_length]
+                offset = offset + 2 * argument_length
+                tx_input['witness_arguments'].append(argument)
+            tx['inputs'].append(tx_input)
+        elif input_type == 2:
+            pass
+    return tx

@@ -35,6 +35,7 @@ from app.api.resources import Get_Gm_P2WPKH_Program
 from app.api.resources import Get_Gm_Address
 from app.api.resources import Get_Gm_New_Key
 from app.api.resources import Get_Gm_New_Address
+from app.api.resources import Decode_Raw_Tx
 
 
 blueprint = Blueprint('api', __name__, url_prefix='/api/v1')
@@ -74,3 +75,4 @@ api.add_resource(Get_Gm_P2WPKH_Program, '/get_gm_P2WPKH_program')
 api.add_resource(Get_Gm_Address, '/get_gm_address')
 api.add_resource(Get_Gm_New_Key, '/get_gm_new_key')
 api.add_resource(Get_Gm_New_Address, '/get_gm_new_address')
+api.add_resource(Decode_Raw_Tx, '/decode_raw_tx')
