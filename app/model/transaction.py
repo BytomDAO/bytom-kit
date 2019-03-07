@@ -1,5 +1,6 @@
 import requests
 import json
+from _pysha3 import sha3_256
 from app.model import receiver
 
 # submit_transaction broadcast raw transaction
@@ -56,7 +57,70 @@ def get_uvarint(uvarint_str):
         s += 7
         i += 1
 
+def get_spend_output_id(source_id_hexstr, asset_id_hexstr, amount_int, source_position_int, vmversion_int, control_program_hexstr):
+    amount_hexstr = amount_int.to_bytes(8, byteorder='little').hex()
+    source_position_hexstr = source_position_int.to_bytes(8, byteorder='little').hex()
+    vmversion_hexstr = vmversion_int.to_bytes(8, byteorder='little').hex()
+    cp_length_int = len(control_program_hexstr) // 2
+    cp_length_hexstr = cp_length_int.to_bytes((cp_length_int.bit_length() + 7) // 8, byteorder='little').hex()
+    sc_hexstr = source_id_hexstr + asset_id_hexstr + amount_hexstr + source_position_hexstr + vmversion_hexstr + cp_length_hexstr +  control_program_hexstr
+    innerhash_hexstr = sha3_256(bytes.fromhex(sc_hexstr)).hexdigest()
+    spend_bytes = b'entryid:output1:' + bytes.fromhex(innerhash_hexstr)
+    spend_output_id_hexstr = sha3_256(spend_bytes).hexdigest()
+    return spend_output_id_hexstr
 
+'''
+decode_raw_tx decode raw transaction
+testdata 1:
+    raw_tx_str: 070100010161015f28b7b53d8dc90006bf97e0a4eaae2a72ec3d869873188698b694beaf20789f21ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff8099c4d5990100011600149335b1cbd4a77b78e33315a0ed10a95b12e7ca48630240897e2d9d24a3b5faaed0579dee7597b401491595675f897504f8945b29d836235bd2fca72a3ad0cae814628973ebcd142d9d6cc92d0b2571b69e5370a98a340c208cb7fb3086f58db9a31401b99e8c658be66134fb9034de1d5c462679270b090702013effffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff80f9f8bc98010116001406ce4b689ba026ffd3a7ca65d1d059546d4b78a000013dffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff80c6868f01011600147929ef91997c827bebf60fa608f876ea27523c4700
+    network_str: solotnet
+    transaction: 
+        {
+            "fee": 20000000,
+            "inputs": [
+                {
+                "address": "sm1qjv6mrj755aah3cenzksw6y9ftvfw0jjgk0l2mw",
+                "amount": 41250000000,
+                "asset_definition": {},
+                "asset_id": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+                "control_program": "00149335b1cbd4a77b78e33315a0ed10a95b12e7ca48",
+                "input_id": "6e3f378ed844b143a335e306f4ba26746157589c87e8fc8cba6463c566c56768",
+                "spent_output_id": "f229ec6f403d586dc87aa2546bbe64c5f7b5f46eb13c6ee4823d03bc88a7cf17",
+                "type": "spend",
+                "witness_arguments": [
+                    "897e2d9d24a3b5faaed0579dee7597b401491595675f897504f8945b29d836235bd2fca72a3ad0cae814628973ebcd142d9d6cc92d0b2571b69e5370a98a340c",
+                    "8cb7fb3086f58db9a31401b99e8c658be66134fb9034de1d5c462679270b0907"
+                ]
+                }
+            ],
+            "outputs": [
+                {
+                "address": "sm1qqm8yk6ym5qn0l5a8efjar5ze23k5k79qnvtslj",
+                "amount": 40930000000,
+                "asset_definition": {},
+                "asset_id": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+                "control_program": "001406ce4b689ba026ffd3a7ca65d1d059546d4b78a0",
+                "id": "74c73266730d3c6ea32e8667ef9b867068736b84be240fe9fef205fa68bb7b95",
+                "position": 0,
+                "type": "control"
+                },
+                {
+                "address": "sm1q0y57lyve0jp8h6lkp7nq37rkagn4y0z8hvh6kq",
+                "amount": 300000000,
+                "asset_definition": {},
+                "asset_id": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+                "control_program": "00147929ef91997c827bebf60fa608f876ea27523c47",
+                "id": "f115a833d0c302a5006032858a7ed3987f0feb2daf2a9f849384950e4766af51",
+                "position": 1,
+                "type": "control"
+                }
+            ],
+            "size": 333,
+            "time_range": 0,
+            "tx_id": "814a73dd57bae67c604f9cbc696cbc42035577423408cb9267136ed971e2bf63",
+            "version": 1
+        }
+'''
 def decode_raw_tx(raw_tx_str, network_str):
     tx = {
         "fee": 0,
@@ -108,9 +172,9 @@ def decode_raw_tx(raw_tx_str, network_str):
             tx_input['amount'], length = get_uvarint(raw_tx_str[offset:offset+16])
             offset = offset + 2 * length
             tx['fee'] += tx_input['amount']
-            _, length = get_uvarint(raw_tx_str[offset:offset+16])
+            source_positon, length = get_uvarint(raw_tx_str[offset:offset+16])
             offset = offset + 2 * length
-            _, length = get_uvarint(raw_tx_str[offset:offset+16])
+            vmversion, length = get_uvarint(raw_tx_str[offset:offset+16])
             offset = offset + 2 * length
             control_program_length, length = get_uvarint(raw_tx_str[offset:offset+16])
             offset = offset + 2 * length
@@ -121,6 +185,7 @@ def decode_raw_tx(raw_tx_str, network_str):
             offset = offset + 2 * length
             witness_arguments_amount, length = get_uvarint(raw_tx_str[offset:offset+16])
             offset = offset + 2 * length
+            tx_input['spend_output_id'] = get_spend_output_id(source_id, tx_input['asset_id'], tx_input['amount'], source_positon, vmversion, tx_input['control_program'])
             for _ in range(witness_arguments_amount):
                 argument_length, length = get_uvarint(raw_tx_str[offset:offset+16])
                 offset = offset + 2 * length
