@@ -57,6 +57,18 @@ def get_uvarint(uvarint_str):
         s += 7
         i += 1
 
+
+'''
+get_spend_output_id create tx_input spend output id
+test data 1:
+  source_id_hexstr: 28b7b53d8dc90006bf97e0a4eaae2a72ec3d869873188698b694beaf20789f21
+  asset_id_hexstr: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+  amount_int: 41250000000
+  source_position_int: 0
+  vmversion_int: 1
+  control_program_hexstr: 00149335b1cbd4a77b78e33315a0ed10a95b12e7ca48
+  spend_output_id_hexstr: f229ec6f403d586dc87aa2546bbe64c5f7b5f46eb13c6ee4823d03bc88a7cf17
+'''
 def get_spend_output_id(source_id_hexstr, asset_id_hexstr, amount_int, source_position_int, vmversion_int, control_program_hexstr):
     amount_hexstr = amount_int.to_bytes(8, byteorder='little').hex()
     source_position_hexstr = source_position_int.to_bytes(8, byteorder='little').hex()
@@ -64,10 +76,22 @@ def get_spend_output_id(source_id_hexstr, asset_id_hexstr, amount_int, source_po
     cp_length_int = len(control_program_hexstr) // 2
     cp_length_hexstr = cp_length_int.to_bytes((cp_length_int.bit_length() + 7) // 8, byteorder='little').hex()
     sc_hexstr = source_id_hexstr + asset_id_hexstr + amount_hexstr + source_position_hexstr + vmversion_hexstr + cp_length_hexstr +  control_program_hexstr
-    innerhash_hexstr = sha3_256(bytes.fromhex(sc_hexstr)).hexdigest()
-    spend_bytes = b'entryid:output1:' + bytes.fromhex(innerhash_hexstr)
+    innerhash_bytes = sha3_256(bytes.fromhex(sc_hexstr)).digest()
+    spend_bytes = b'entryid:output1:' + innerhash_bytes
     spend_output_id_hexstr = sha3_256(spend_bytes).hexdigest()
     return spend_output_id_hexstr
+
+'''
+get_input_id create tx input_id
+test data 1:
+    spend_output_id_hexstr: f229ec6f403d586dc87aa2546bbe64c5f7b5f46eb13c6ee4823d03bc88a7cf17
+    input_id_hexstr: 6e3f378ed844b143a335e306f4ba26746157589c87e8fc8cba6463c566c56768
+'''
+def get_input_id(spend_output_id_hexstr):
+    innerhash_bytes = sha3_256(bytes.fromhex(spend_output_id_hexstr)).digest()
+    input_id_hexstr = sha3_256(b'entryid:spend1:' + innerhash_bytes).hexdigest()
+    return input_id_hexstr
+
 
 '''
 decode_raw_tx decode raw transaction
@@ -186,6 +210,7 @@ def decode_raw_tx(raw_tx_str, network_str):
             witness_arguments_amount, length = get_uvarint(raw_tx_str[offset:offset+16])
             offset = offset + 2 * length
             tx_input['spend_output_id'] = get_spend_output_id(source_id, tx_input['asset_id'], tx_input['amount'], source_positon, vmversion, tx_input['control_program'])
+            tx_input['input_id'] = get_input_id(tx_input['spend_output_id'])
             for _ in range(witness_arguments_amount):
                 argument_length, length = get_uvarint(raw_tx_str[offset:offset+16])
                 offset = offset + 2 * length
