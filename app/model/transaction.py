@@ -93,57 +93,55 @@ def get_input_id(spend_output_id_hexstr):
     return input_id_hexstr
 
 
+# def get_output_id():
+
+
 '''
 decode_raw_tx decode raw transaction
 testdata 1:
     raw_tx_str: 070100010161015f28b7b53d8dc90006bf97e0a4eaae2a72ec3d869873188698b694beaf20789f21ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff8099c4d5990100011600149335b1cbd4a77b78e33315a0ed10a95b12e7ca48630240897e2d9d24a3b5faaed0579dee7597b401491595675f897504f8945b29d836235bd2fca72a3ad0cae814628973ebcd142d9d6cc92d0b2571b69e5370a98a340c208cb7fb3086f58db9a31401b99e8c658be66134fb9034de1d5c462679270b090702013effffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff80f9f8bc98010116001406ce4b689ba026ffd3a7ca65d1d059546d4b78a000013dffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff80c6868f01011600147929ef91997c827bebf60fa608f876ea27523c4700
     network_str: solotnet
     transaction: 
-        {
-            "fee": 20000000,
-            "inputs": [
+    {
+        "status":"success",
+        "data":{
+            "tx_id":"4f642e0eb1cff2a0bbc085a411a32d74af2f84f9749de0502517b8bebc8ef094",
+            "version":1,
+            "size":263,
+            "time_range":200001,
+            "inputs":[
                 {
-                "address": "sm1qjv6mrj755aah3cenzksw6y9ftvfw0jjgk0l2mw",
-                "amount": 41250000000,
-                "asset_definition": {},
-                "asset_id": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
-                "control_program": "00149335b1cbd4a77b78e33315a0ed10a95b12e7ca48",
-                "input_id": "6e3f378ed844b143a335e306f4ba26746157589c87e8fc8cba6463c566c56768",
-                "spent_output_id": "f229ec6f403d586dc87aa2546bbe64c5f7b5f46eb13c6ee4823d03bc88a7cf17",
-                "type": "spend",
-                "witness_arguments": [
-                    "897e2d9d24a3b5faaed0579dee7597b401491595675f897504f8945b29d836235bd2fca72a3ad0cae814628973ebcd142d9d6cc92d0b2571b69e5370a98a340c",
-                    "8cb7fb3086f58db9a31401b99e8c658be66134fb9034de1d5c462679270b0907"
-                ]
+                    "type":"spend",
+                    "asset_id":"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+                    "asset_definition":{},
+                    "amount":101100,
+                    "control_program":"0014ddca4dca2cad2781d2002e23a080fe39415b6e54",
+                    "address":"tm1qmh9ymj3v45ncr5sq9c36pq8789q4kmj5dzjv54",
+                    "spent_output_id":"13c5afc4057758a0ffa43b81e03d79b4929eeb7010fdeb6ca6abd06e93a60669",
+                    "input_id":"401519f734c8a0888b3894fcbf01e14818d26492d6d6510233974657a9daf5bf",
+                    "witness_arguments":[
+                        "629be85f527ff91c503c947e32fb8b35eec8e3b7fe9c45f7da95e081f4bdf3456ffeb203bcf0e6bbd609628bfca774ff797fd515d1ac918feab36f3fa008fc0d",
+                        "4b4c18238df718bb957bc4144d7c1472bc185328911ac18c11d655943396e0b2"
+                    ]
                 }
             ],
-            "outputs": [
+            "outputs":[
                 {
-                "address": "sm1qqm8yk6ym5qn0l5a8efjar5ze23k5k79qnvtslj",
-                "amount": 40930000000,
-                "asset_definition": {},
-                "asset_id": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
-                "control_program": "001406ce4b689ba026ffd3a7ca65d1d059546d4b78a0",
-                "id": "74c73266730d3c6ea32e8667ef9b867068736b84be240fe9fef205fa68bb7b95",
-                "position": 0,
-                "type": "control"
-                },
-                {
-                "address": "sm1q0y57lyve0jp8h6lkp7nq37rkagn4y0z8hvh6kq",
-                "amount": 300000000,
-                "asset_definition": {},
-                "asset_id": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
-                "control_program": "00147929ef91997c827bebf60fa608f876ea27523c47",
-                "id": "f115a833d0c302a5006032858a7ed3987f0feb2daf2a9f849384950e4766af51",
-                "position": 1,
-                "type": "control"
+                    "type":"control",
+                    "id":"fb4ced05db7a1872965ba071fdeaf965b669ac7ce08768fa2cfd7c0440691dad",
+                    "position":0,
+                    "asset_id":"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+                    "asset_definition":{
+
+                    },
+                    "amount":11,
+                    "control_program":"00146baa02b3a7217402e34ff7202ee08795c252956c",
+                    "address":"tm1qdw4q9va8y96q9c607uszacy8jhp999tvqqhcm7"
                 }
             ],
-            "size": 333,
-            "time_range": 0,
-            "tx_id": "814a73dd57bae67c604f9cbc696cbc42035577423408cb9267136ed971e2bf63",
-            "version": 1
+            "fee":101089
         }
+    }
 '''
 def decode_raw_tx(raw_tx_str, network_str):
     tx = {
@@ -173,7 +171,7 @@ def decode_raw_tx(raw_tx_str, network_str):
             "asset_id": "",
             "control_program": "",
             "input_id": "",
-            "spend_output_id": "",
+            "spent_output_id": "",
             "type": "",
             "witness_arguments": []
         }
@@ -209,8 +207,8 @@ def decode_raw_tx(raw_tx_str, network_str):
             offset = offset + 2 * length
             witness_arguments_amount, length = get_uvarint(raw_tx_str[offset:offset+16])
             offset = offset + 2 * length
-            tx_input['spend_output_id'] = get_spend_output_id(source_id, tx_input['asset_id'], tx_input['amount'], source_positon, vmversion, tx_input['control_program'])
-            tx_input['input_id'] = get_input_id(tx_input['spend_output_id'])
+            tx_input['spent_output_id'] = get_spend_output_id(source_id, tx_input['asset_id'], tx_input['amount'], source_positon, vmversion, tx_input['control_program'])
+            tx_input['input_id'] = get_input_id(tx_input['spent_output_id'])
             for _ in range(witness_arguments_amount):
                 argument_length, length = get_uvarint(raw_tx_str[offset:offset+16])
                 offset = offset + 2 * length
