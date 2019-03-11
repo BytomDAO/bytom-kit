@@ -93,7 +93,16 @@ def get_input_id(spend_output_id_hexstr):
     return input_id_hexstr
 
 
-# def get_output_id():
+def get_mux_id(prepare_mux_hexstr):
+    innerhash_bytes = sha3_256(bytes.fromhex(prepare_mux_hexstr)).digest()
+    mux_id_hexstr = sha3_256(b'entryid:mux1:' + innerhash_bytes).hexdigest()
+    return mux_id_hexstr
+
+
+def get_output_id(prepare_output_id_hexstr):
+    innerhash_bytes = sha3_256(bytes.fromhex(prepare_output_id_hexstr)).digest()
+    output_id_hexstr = sha3_256(b'entryid:output1:' + innerhash_bytes).hexdigest()
+    return output_id_hexstr
 
 
 '''
@@ -168,6 +177,7 @@ def decode_raw_tx(raw_tx_str, network_str):
     offset = offset + 2 * length
     tx_input_amount, length = get_uvarint(raw_tx_str[offset:offset+8])
     offset = offset + 2 * length
+    prepare_mux_hexstr = (tx_input_amount).to_bytes((tx_input_amount.bit_length() + 7) // 8, 'little').hex()
     for _ in range(tx_input_amount):
         tx_input = {
             "address": "",
@@ -221,10 +231,13 @@ def decode_raw_tx(raw_tx_str, network_str):
                 offset = offset + 2 * argument_length
                 tx_input['witness_arguments'].append(argument)
             tx['inputs'].append(tx_input)
+            prepare_mux_hexstr += tx_input['input_id'] + tx_input['asset_id'] + (tx_input['amount']).to_bytes(8, byteorder='little').hex() + '0000000000000000'
         elif input_type == 2:
             pass
     tx_output_amount, length = get_uvarint(raw_tx_str[offset:offset+16])
     offset = offset + 2 * length
+    prepare_mux_hexstr += '0100000000000000' + '0151'
+    mux_id_hexstr = get_mux_id(prepare_mux_hexstr)
     for i in range(tx_output_amount):
         tx_output = {
             "address": "",
@@ -255,5 +268,7 @@ def decode_raw_tx(raw_tx_str, network_str):
         tx_output['address'] = receiver.create_address(tx_output['control_program'], network_str)['address']
         _, length = get_uvarint(raw_tx_str[offset:offset+16])
         offset = offset + 2 * length
+        prepare_output_id_hexstr = mux_id_hexstr + tx_output['asset_id'] + (tx_output['amount']).to_bytes(8, byteorder='little').hex() + (i).to_bytes(8, byteorder='little').hex() + '0100000000000000' + (control_program_length).to_bytes((control_program_length.bit_length() + 7) // 8, 'little').hex() + tx_output['control_program']
+        tx_output['id'] = get_output_id(prepare_output_id_hexstr)
         tx['outputs'].append(tx_output)
     return tx
