@@ -4,7 +4,7 @@ $(function(){
     console.log('创建新密钥');
     $.ajax({
       method: 'post',  //get or post
-      url: 'http://kit.blockmeta.com/api/v1/create_new_key',
+      url: 'https://kit.blockmeta.com/api/v1/create_new_key',
       data: {},
       dataType: 'json',
     }).done(function(data){
@@ -43,7 +43,7 @@ $(function(){
     var network_str = $("input[name='inlineRadioOptionsNetwork']:checked").val()
     $.ajax({
       method: 'post',  //get or post
-      url: 'http://kit.blockmeta.com/api/v1/create_new_address',
+      url: 'https://kit.blockmeta.com/api/v1/create_new_address',
       data: {
         "xpub_str": xpub_str,
         "account_index_int": account_index_int,
@@ -81,7 +81,7 @@ $(function(){
     var message_str = $('#txtMessage').val()
     $.ajax({
       method: 'post',  //get or post
-      url: 'http://kit.blockmeta.com/api/v1/xprv_sign',
+      url: 'https://kit.blockmeta.com/api/v1/xprv_sign',
       data: {
         "xprv_str": xprv_str,
         "message_str": message_str
@@ -110,7 +110,7 @@ $(function(){
     var signature_str = $('#txtSignatureVerify').val()
     $.ajax({
       method: 'post',  //get or post
-      url: 'http://kit.blockmeta.com/api/v1/xpub_verify',
+      url: 'https://kit.blockmeta.com/api/v1/xpub_verify',
       data: {
         "xpub_str": xpub_str,
         "message_str": message_str,
@@ -140,7 +140,7 @@ $(function(){
     var network_str = $("input[name='inlineRadioOptionsNetworkSubmitTx']:checked").val()
     $.ajax({
       method: 'post',  //get or post
-      url: 'http://kit.blockmeta.com/api/v1/submit_transaction',
+      url: 'https://kit.blockmeta.com/api/v1/submit_transaction',
       data: {
         "raw_transaction_str": raw_transaction_str,
         "network_str": network_str
@@ -165,7 +165,7 @@ $(function(){
     var raw_transaction_str = $('#txtRawHexTransaction').val()
     $.ajax({
       method: 'post',  //get or post
-      url: 'http://kit.blockmeta.com/api/v1/decode_raw_transaction',
+      url: 'https://kit.blockmeta.com/api/v1/decode_raw_transaction',
       data: {
         "raw_transaction_str": raw_transaction_str
       },
