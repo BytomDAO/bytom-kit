@@ -279,6 +279,7 @@ def decode_raw_tx(raw_tx_str, network_str):
         prepare_output_id_hexstr = mux_id_hexstr + tx_output['asset_id'] + (tx_output['amount']).to_bytes(8, byteorder='little').hex() + (i).to_bytes(8, byteorder='little').hex() + '0100000000000000' + (control_program_length).to_bytes((control_program_length.bit_length() + 7) // 8, 'little').hex() + tx_output['control_program']
         tx_output['id'] = get_output_id(prepare_output_id_hexstr)
         prepare_tx_id_hexstr += tx_output['id']
+        tx_output['type'] = 'control'
         tx['outputs'].append(tx_output)
     tx['tx_id'] = get_tx_id(prepare_tx_id_hexstr)
     return tx
