@@ -186,26 +186,26 @@ def decode_raw_tx(raw_tx_str, network_str):
     prepare_mux_hexstr = (tx_input_amount).to_bytes((tx_input_amount.bit_length() + 7) // 8, 'little').hex()
     prepare_tx_id_hexstr = (tx['version']).to_bytes(8, 'little').hex() + (tx['time_range']).to_bytes(8, 'little').hex()
     for _ in range(tx_input_amount):
-        tx_input = {
-            "address": "",
-            "amount": 0,
-            "asset_definition": {},
-            "asset_id": "",
-            "control_program": "",
-            "input_id": "",
-            "spent_output_id": "",
-            "type": "",
-            "witness_arguments": []
-        }
         _, length = get_uvarint(raw_tx_str[offset:offset+16])
         offset = offset + 2 * length
         _, length = get_uvarint(raw_tx_str[offset:offset+16])
         offset = offset + 2 * length
         input_type = int(raw_tx_str[offset:offset+2], 16)
         offset += 2
-        if input_type == 0:
+        if input_type == 0: # issue
             pass
-        elif input_type == 1:
+        elif input_type == 1: # spend
+            tx_input = {
+                "address": "",
+                "amount": 0,
+                "asset_definition": {},
+                "asset_id": "",
+                "control_program": "",
+                "input_id": "",
+                "spent_output_id": "",
+                "type": "",
+                "witness_arguments": []
+            }
             tx_input['type'] = "spend"
             _, length = get_uvarint(raw_tx_str[offset:offset+16])
             offset = offset + 2 * length
@@ -239,7 +239,7 @@ def decode_raw_tx(raw_tx_str, network_str):
                 tx_input['witness_arguments'].append(argument)
             tx['inputs'].append(tx_input)
             prepare_mux_hexstr += tx_input['input_id'] + tx_input['asset_id'] + (tx_input['amount']).to_bytes(8, byteorder='little').hex() + '0000000000000000'
-        elif input_type == 2:
+        elif input_type == 2: # coinbase
             pass
     tx_output_amount, length = get_uvarint(raw_tx_str[offset:offset+16])
     offset = offset + 2 * length
