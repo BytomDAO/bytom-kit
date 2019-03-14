@@ -111,6 +111,12 @@ def get_tx_id(prepare_tx_id_hexstr):
     return tx_id_hexstr
 
 
+def get_issue_input_id(prepare_issue_hexstr):
+    innerhash_bytes = sha3_256(bytes.fromhex(prepare_issue_hexstr)).digest()
+    tx_id_hexstr = sha3_256(b'entryid:issuance1:' + innerhash_bytes).hexdigest()
+    return tx_id_hexstr
+
+
 '''
 decode_raw_tx decode raw transaction
 testdata 1:
@@ -193,7 +199,49 @@ def decode_raw_tx(raw_tx_str, network_str):
         input_type = int(raw_tx_str[offset:offset+2], 16)
         offset += 2
         if input_type == 0: # issue
-            pass
+            tx_input = {
+                "amount": 0,
+                "asset_definition": "", # TODO:fix it!!
+                "asset_id": "",
+                "input_id": "",
+                "issuance_program": "",
+                "type": "",
+                "witness_arguments": []
+            }
+            tx_input['type'] = "issue"
+            _, length = get_uvarint(raw_tx_str[offset:offset+16])
+            offset = offset + 2 * length
+            nonce = raw_tx_str[offset:offset+16]
+            offset += 16
+            nonce_hash_hexstr = sha3_256(bytes.fromhex(nonce)).hexdigest()
+            tx_input['asset_id'] = raw_tx_str[offset:offset+64]
+            offset += 64
+            tx_input['amount'], length = get_uvarint(raw_tx_str[offset:offset+16])
+            offset = offset + 2 * length
+            _, length = get_uvarint(raw_tx_str[offset:offset+16])
+            offset = offset + 2 * length
+            asset_definition_size, length = get_uvarint(raw_tx_str[offset:offset+16])
+            offset = offset + 2 * length
+            tx_input['asset_definition'] = raw_tx_str[offset:offset+2*asset_definition_size]
+            offset = offset + 2 * asset_definition_size
+            _, length = get_uvarint(raw_tx_str[offset:offset+16])
+            offset = offset + 2 * length
+            issuance_program_length, length = get_uvarint(raw_tx_str[offset:offset+16])
+            offset = offset + 2 * length
+            tx_input['issuance_program'] = raw_tx_str[offset:offset+2*issuance_program_length]
+            offset = offset + 2 * issuance_program_length
+            witness_arguments_amount, length = get_uvarint(raw_tx_str[offset:offset+16])
+            offset = offset + 2 * length
+            for _ in range(witness_arguments_amount):
+                argument_length, length = get_uvarint(raw_tx_str[offset:offset+16])
+                offset = offset + 2 * length
+                argument = raw_tx_str[offset:offset+2*argument_length]
+                offset = offset + 2 * argument_length
+                tx_input['witness_arguments'].append(argument)
+            prepare_issue_hexstr = nonce_hash_hexstr + tx_input['asset_id'] + (tx_input['amount']).to_bytes(8, byteorder='little').hex()
+            tx_input['input_id'] = get_issue_input_id(prepare_issue_hexstr)
+            tx['inputs'].append(tx_input)
+            prepare_mux_hexstr += tx_input['input_id'] + tx_input['asset_id'] + (tx_input['amount']).to_bytes(8, byteorder='little').hex() + '0000000000000000'
         elif input_type == 1: # spend
             tx_input = {
                 "address": "",
