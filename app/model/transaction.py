@@ -222,7 +222,7 @@ def decode_raw_tx(raw_tx_str, network_str):
             offset = offset + 2 * length
             asset_definition_size, length = get_uvarint(raw_tx_str[offset:offset+16])
             offset = offset + 2 * length
-            tx_input['asset_definition'] = raw_tx_str[offset:offset+2*asset_definition_size]
+            tx_input['asset_definition'] = bytes.fromhex(raw_tx_str[offset:offset+2*asset_definition_size]).decode()
             offset = offset + 2 * asset_definition_size
             _, length = get_uvarint(raw_tx_str[offset:offset+16])
             offset = offset + 2 * length
