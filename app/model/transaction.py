@@ -314,7 +314,8 @@ def decode_raw_tx(raw_tx_str, network_str):
         offset = offset + 64
         tx_output['amount'], length = get_uvarint(raw_tx_str[offset:offset+16])
         offset = offset + 2 * length
-        tx['fee'] -= tx_output['amount']
+        if tx_output['asset_id'] == 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff':
+            tx['fee'] -= tx_output['amount']
         _, length = get_uvarint(raw_tx_str[offset:offset+16])
         offset = offset + 2 * length
         control_program_length, length = get_uvarint(raw_tx_str[offset:offset+16])
