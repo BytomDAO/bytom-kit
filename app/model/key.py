@@ -384,9 +384,14 @@ def xpub_verify(xpub_str, message_str, signature_str):
     }
 
 
-def create_new_key():
-    entropy_str = create_entropy()['entropy']
-    mnemonic_str = entropy_to_mnemonic(entropy_str)['mnemonic']
+def create_new_key(entropy_str, mnemonic_str):
+    if (entropy_str == "") and (mnemonic_str == ""):
+        entropy_str = create_entropy()['entropy']
+        mnemonic_str = entropy_to_mnemonic(entropy_str)['mnemonic']
+    if (entropy_str == "") and (mnemonic_str != ""):
+        pass
+    if entropy_str != "":
+        mnemonic_str = entropy_to_mnemonic(entropy_str)['mnemonic']
     seed_str = mnemonic_to_seed(mnemonic_str)['seed']
     root_xprv_str = seed_to_root_xprv(seed_str)['root_xprv']
     xpub_str = xprv_to_xpub(root_xprv_str)['xpub']

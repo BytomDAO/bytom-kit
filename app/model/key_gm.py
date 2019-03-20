@@ -274,9 +274,14 @@ def gm_xpub_verify(xpub_str, message_str, signature_str):
     }
 
 
-def get_gm_new_key():
-    entropy_str = key.create_entropy()['entropy']
-    mnemonic_str = key.entropy_to_mnemonic(entropy_str)['mnemonic']
+def get_gm_new_key(entropy_str, mnemonic_str):
+    if (entropy_str == "") and (mnemonic_str == ""):
+        entropy_str = key.create_entropy()['entropy']
+        mnemonic_str = key.entropy_to_mnemonic(entropy_str)['mnemonic']
+    if (entropy_str == "") and (mnemonic_str != ""):
+        pass
+    if entropy_str != "":
+        mnemonic_str = key.entropy_to_mnemonic(entropy_str)['mnemonic']
     seed_str = key.mnemonic_to_seed(mnemonic_str)['seed']
     root_xprv_str = get_gm_root_xprv(seed_str)['root_xprv']
     xpub_str = get_gm_xpub(root_xprv_str)['xpub']

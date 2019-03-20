@@ -224,7 +224,11 @@ class Create_QRcode_Base64(Resource):
 class Create_New_Key(Resource):
 
     def post(self):
-        return create_new_key()
+        args = parser.parse_args()
+        entropy = args.get('entropy_str')
+        mnemonic = args.get('mnemonic_str')
+        response = create_new_key(entropy, mnemonic)
+        return response
 
 
 class Create_New_Address(Resource):
@@ -339,7 +343,11 @@ class Get_Gm_Address(Resource):
 class Get_Gm_New_Key(Resource):
 
     def post(self):
-        return get_gm_new_key()
+        args = parser.parse_args()
+        entropy = args.get('entropy_str')
+        mnemonic = args.get('mnemonic_str')
+        response = get_gm_new_key(entropy, mnemonic)
+        return response
 
 class Get_Gm_New_Address(Resource):
 
