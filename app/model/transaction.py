@@ -248,6 +248,8 @@ def decode_raw_tx(raw_tx_str, network_str):
             tx_input['input_id'] = get_issue_input_id(prepare_issue_hexstr)
             tx['inputs'].append(tx_input)
             prepare_mux_hexstr += tx_input['input_id'] + tx_input['asset_id'] + (tx_input['amount']).to_bytes(8, byteorder='little').hex() + '0000000000000000'
+            prepare_mux_hexstr += '0100000000000000' + '0151'
+            mux_id_hexstr = get_mux_id(prepare_mux_hexstr)
         elif input_type == 1: # spend
             tx_input = {
                 "address": "",
@@ -293,6 +295,8 @@ def decode_raw_tx(raw_tx_str, network_str):
                 tx_input['witness_arguments'].append(argument)
             tx['inputs'].append(tx_input)
             prepare_mux_hexstr += tx_input['input_id'] + tx_input['asset_id'] + (tx_input['amount']).to_bytes(8, byteorder='little').hex() + '0000000000000000'
+            prepare_mux_hexstr += '0100000000000000' + '0151'
+            mux_id_hexstr = get_mux_id(prepare_mux_hexstr)
         elif input_type == 2: # coinbase
             tx_input = {
                 "amount": 0,
@@ -314,12 +318,8 @@ def decode_raw_tx(raw_tx_str, network_str):
             offset = offset + 2
             tx['inputs'].append(tx_input)
             prepare_mux_hexstr += tx_input['input_id'] + 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
-    if tx_input['type'] == "coinbase":
-        offset = offset + 2 * length
     tx_output_amount, length = get_uvarint(raw_tx_str[offset:offset+18])
-    if (tx_input['type'] == "issue") or (tx_input['type'] == "spend"):
-        prepare_mux_hexstr += '0100000000000000' + '0151'
-        mux_id_hexstr = get_mux_id(prepare_mux_hexstr)
+    offset = offset + 2 * length
     prepare_tx_id_hexstr += (tx_output_amount).to_bytes((tx_output_amount.bit_length() + 7) // 8, 'little').hex()
     for i in range(tx_output_amount):
         tx_output = {
