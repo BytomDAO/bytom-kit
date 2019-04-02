@@ -36,6 +36,8 @@ from app.model.receiver import get_gm_address
 from app.model.key_gm import get_gm_new_key
 from app.model.receiver import get_gm_new_address
 from app.model.transaction import decode_raw_tx
+from app.model.faucet import get_testnet_coins
+from app.model.faucet import get_gm_testnet_coins
 
 
 parser = reqparse.RequestParser()
@@ -57,6 +59,7 @@ parser.add_argument('network_str', type=str)
 parser.add_argument('raw_transaction_str', type=str)
 parser.add_argument('address_str', type=str)
 parser.add_argument('s', type=str)
+parser.add_argument('receiver_str', type=str)
 
 class Hello(Resource):
 
@@ -369,3 +372,19 @@ class Decode_Raw_Tx(Resource):
         raw_transaction = args.get('raw_transaction_str')
         tx = decode_raw_tx(raw_transaction, network)
         return tx
+
+class Get_Testnet_Coins(Resource):
+
+    def post(self):
+        args = parser.parse_args()
+        receiver = args.get('receiver_str')
+        tx_id = get_testnet_coins(receiver)
+        return tx_id
+
+class Get_Gm_Testnet_Coins(Resource):
+
+    def post(self):
+        args = parser.parse_args()
+        receiver = args.get('receiver_str')
+        tx_id = get_gm_testnet_coins(receiver)
+        return tx_id
