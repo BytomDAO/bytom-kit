@@ -49,7 +49,7 @@ def get_gm_testnet_coins(receiver_str):
     transaction_dict = {
         "actions":[
             {
-                "account_id":"0KN9JNBA00A02",
+                "account_id":"0KN8NES7G0A02",
                 "amount":1020000000,
                 "asset_id":"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
                 "type":"spend_account",
