@@ -126,7 +126,7 @@ def get_coinbase_input_id(prepare_coinbase_input_id_hexstr):
 '''
 decode_raw_tx decode raw transaction
 testdata 1:
-    raw_tx_str: 070100010161015f28b7b53d8dc90006bf97e0a4eaae2a72ec3d869873188698b694beaf20789f21ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff8099c4d5990100011600149335b1cbd4a77b78e33315a0ed10a95b12e7ca48630240897e2d9d24a3b5faaed0579dee7597b401491595675f897504f8945b29d836235bd2fca72a3ad0cae814628973ebcd142d9d6cc92d0b2571b69e5370a98a340c208cb7fb3086f58db9a31401b99e8c658be66134fb9034de1d5c462679270b090702013effffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff80f9f8bc98010116001406ce4b689ba026ffd3a7ca65d1d059546d4b78a000013dffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff80c6868f01011600147929ef91997c827bebf60fa608f876ea27523c4700
+    raw_transaction_str: 070100010161015f28b7b53d8dc90006bf97e0a4eaae2a72ec3d869873188698b694beaf20789f21ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff8099c4d5990100011600149335b1cbd4a77b78e33315a0ed10a95b12e7ca48630240897e2d9d24a3b5faaed0579dee7597b401491595675f897504f8945b29d836235bd2fca72a3ad0cae814628973ebcd142d9d6cc92d0b2571b69e5370a98a340c208cb7fb3086f58db9a31401b99e8c658be66134fb9034de1d5c462679270b090702013effffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff80f9f8bc98010116001406ce4b689ba026ffd3a7ca65d1d059546d4b78a000013dffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff80c6868f01011600147929ef91997c827bebf60fa608f876ea27523c4700
     network_str: solonet
     transaction: 
 {
@@ -175,7 +175,7 @@ testdata 1:
   "version": 1
 }
 '''
-def decode_raw_tx(raw_tx_str, network_str):
+def decode_raw_tx(raw_transaction_str, network_str):
     tx = {
         "fee": 0,
         "inputs": [],
@@ -186,23 +186,23 @@ def decode_raw_tx(raw_tx_str, network_str):
         "version": 0
     }
     tx['fee'] = 0
-    tx['size'] = len(raw_tx_str) // 2
+    tx['size'] = len(raw_transaction_str) // 2
     length = 0
     offset = 2
-    tx['version'], length = get_uvarint(raw_tx_str[offset:offset+18])
+    tx['version'], length = get_uvarint(raw_transaction_str[offset:offset+18])
     offset = offset + 2 * length
-    tx['time_range'], length = get_uvarint(raw_tx_str[offset:offset+18])
+    tx['time_range'], length = get_uvarint(raw_transaction_str[offset:offset+18])
     offset = offset + 2 * length
-    tx_input_amount, length = get_uvarint(raw_tx_str[offset:offset+8])
+    tx_input_amount, length = get_uvarint(raw_transaction_str[offset:offset+8])
     offset = offset + 2 * length
     prepare_mux_hexstr = (tx_input_amount).to_bytes((tx_input_amount.bit_length() + 7) // 8, 'little').hex()
     prepare_tx_id_hexstr = (tx['version']).to_bytes(8, 'little').hex() + (tx['time_range']).to_bytes(8, 'little').hex()
     for _ in range(tx_input_amount):
-        _, length = get_uvarint(raw_tx_str[offset:offset+18])
+        _, length = get_uvarint(raw_transaction_str[offset:offset+18])
         offset = offset + 2 * length
-        _, length = get_uvarint(raw_tx_str[offset:offset+18])
+        _, length = get_uvarint(raw_transaction_str[offset:offset+18])
         offset = offset + 2 * length
-        input_type = int(raw_tx_str[offset:offset+2], 16)
+        input_type = int(raw_transaction_str[offset:offset+2], 16)
         offset += 2
         if input_type == 0: # issue
             tx_input = {
@@ -215,33 +215,33 @@ def decode_raw_tx(raw_tx_str, network_str):
                 "witness_arguments": []
             }
             tx_input['type'] = "issue"
-            _, length = get_uvarint(raw_tx_str[offset:offset+18])
+            _, length = get_uvarint(raw_transaction_str[offset:offset+18])
             offset = offset + 2 * length
-            nonce = raw_tx_str[offset:offset+16]
+            nonce = raw_transaction_str[offset:offset+16]
             offset += 16
             nonce_hash_hexstr = sha3_256(bytes.fromhex(nonce)).hexdigest()
-            tx_input['asset_id'] = raw_tx_str[offset:offset+64]
+            tx_input['asset_id'] = raw_transaction_str[offset:offset+64]
             offset += 64
-            tx_input['amount'], length = get_uvarint(raw_tx_str[offset:offset+18])
+            tx_input['amount'], length = get_uvarint(raw_transaction_str[offset:offset+18])
             offset = offset + 2 * length
-            _, length = get_uvarint(raw_tx_str[offset:offset+18])
+            _, length = get_uvarint(raw_transaction_str[offset:offset+18])
             offset = offset + 2 * length
-            asset_definition_size, length = get_uvarint(raw_tx_str[offset:offset+18])
+            asset_definition_size, length = get_uvarint(raw_transaction_str[offset:offset+18])
             offset = offset + 2 * length
-            tx_input['asset_definition'] = bytes.fromhex(raw_tx_str[offset:offset+2*asset_definition_size]).decode()
+            tx_input['asset_definition'] = bytes.fromhex(raw_transaction_str[offset:offset+2*asset_definition_size]).decode()
             offset = offset + 2 * asset_definition_size
-            _, length = get_uvarint(raw_tx_str[offset:offset+18])
+            _, length = get_uvarint(raw_transaction_str[offset:offset+18])
             offset = offset + 2 * length
-            issuance_program_length, length = get_uvarint(raw_tx_str[offset:offset+18])
+            issuance_program_length, length = get_uvarint(raw_transaction_str[offset:offset+18])
             offset = offset + 2 * length
-            tx_input['issuance_program'] = raw_tx_str[offset:offset+2*issuance_program_length]
+            tx_input['issuance_program'] = raw_transaction_str[offset:offset+2*issuance_program_length]
             offset = offset + 2 * issuance_program_length
-            witness_arguments_amount, length = get_uvarint(raw_tx_str[offset:offset+18])
+            witness_arguments_amount, length = get_uvarint(raw_transaction_str[offset:offset+18])
             offset = offset + 2 * length
             for _ in range(witness_arguments_amount):
-                argument_length, length = get_uvarint(raw_tx_str[offset:offset+18])
+                argument_length, length = get_uvarint(raw_transaction_str[offset:offset+18])
                 offset = offset + 2 * length
-                argument = raw_tx_str[offset:offset+2*argument_length]
+                argument = raw_transaction_str[offset:offset+2*argument_length]
                 offset = offset + 2 * argument_length
                 tx_input['witness_arguments'].append(argument)
             prepare_issue_hexstr = nonce_hash_hexstr + tx_input['asset_id'] + (tx_input['amount']).to_bytes(8, byteorder='little').hex()
@@ -263,36 +263,40 @@ def decode_raw_tx(raw_tx_str, network_str):
                 "witness_arguments": []
             }
             tx_input['type'] = "spend"
-            _, length = get_uvarint(raw_tx_str[offset:offset+18])
+            _, length = get_uvarint(raw_transaction_str[offset:offset+18])
             offset = offset + 2 * length
-            source_id = raw_tx_str[offset:offset+64]
+            source_id = raw_transaction_str[offset:offset+64]
             offset += 64
-            tx_input['asset_id'] = raw_tx_str[offset:offset+64]
+            tx_input['asset_id'] = raw_transaction_str[offset:offset+64]
             offset += 64
-            tx_input['amount'], length = get_uvarint(raw_tx_str[offset:offset+18])
+            tx_input['amount'], length = get_uvarint(raw_transaction_str[offset:offset+18])
             offset = offset + 2 * length
             tx['fee'] += tx_input['amount']
-            source_positon, length = get_uvarint(raw_tx_str[offset:offset+18])
+            source_positon, length = get_uvarint(raw_transaction_str[offset:offset+18])
             offset = offset + 2 * length
-            vmversion, length = get_uvarint(raw_tx_str[offset:offset+18])
+            vmversion, length = get_uvarint(raw_transaction_str[offset:offset+18])
             offset = offset + 2 * length
-            control_program_length, length = get_uvarint(raw_tx_str[offset:offset+18])
+            control_program_length, length = get_uvarint(raw_transaction_str[offset:offset+18])
             offset = offset + 2 * length
-            tx_input['control_program'] = raw_tx_str[offset:offset+2*control_program_length]
+            tx_input['control_program'] = raw_transaction_str[offset:offset+2*control_program_length]
             offset = offset + 2 * control_program_length
             tx_input['address'] = receiver.create_address(tx_input['control_program'], network_str)['address']
-            _, length = get_uvarint(raw_tx_str[offset:offset+18])
+            _, length = get_uvarint(raw_transaction_str[offset:offset+18])
             offset = offset + 2 * length
-            witness_arguments_amount, length = get_uvarint(raw_tx_str[offset:offset+18])
+            witness_arguments_amount, length = get_uvarint(raw_transaction_str[offset:offset+18])
             offset = offset + 2 * length
+            if witness_arguments_amount == 1:
+                offset = offset + 2
+                tx_input['witness_arguments'] = None
+            else: 
+                for _ in range(witness_arguments_amount):
+                    argument_length, length = get_uvarint(raw_transaction_str[offset:offset+18])
+                    offset = offset + 2 * length
+                    argument = raw_transaction_str[offset:offset+2*argument_length]
+                    offset = offset + 2 * argument_length
+                    tx_input['witness_arguments'].append(argument)
             tx_input['spent_output_id'] = get_spend_output_id(source_id, tx_input['asset_id'], tx_input['amount'], source_positon, vmversion, tx_input['control_program'])
             tx_input['input_id'] = get_input_id(tx_input['spent_output_id'])
-            for _ in range(witness_arguments_amount):
-                argument_length, length = get_uvarint(raw_tx_str[offset:offset+18])
-                offset = offset + 2 * length
-                argument = raw_tx_str[offset:offset+2*argument_length]
-                offset = offset + 2 * argument_length
-                tx_input['witness_arguments'].append(argument)
             tx['inputs'].append(tx_input)
             prepare_mux_hexstr += tx_input['input_id'] + tx_input['asset_id'] + (tx_input['amount']).to_bytes(8, byteorder='little').hex() + '0000000000000000'
             prepare_mux_hexstr += '0100000000000000' + '0151'
@@ -308,17 +312,17 @@ def decode_raw_tx(raw_tx_str, network_str):
                 "witness_arguments": []
             }
             tx_input['type'] = "coinbase"
-            arbitrary_length, length = get_uvarint(raw_tx_str[offset:offset+18])
-            prepare_coinbase_input_id_hexstr = raw_tx_str[offset:offset+2*length]
+            arbitrary_length, length = get_uvarint(raw_transaction_str[offset:offset+18])
+            prepare_coinbase_input_id_hexstr = raw_transaction_str[offset:offset+2*length]
             offset = offset + 2 * length
-            tx_input['arbitrary'] = raw_tx_str[offset:offset+2*arbitrary_length]
+            tx_input['arbitrary'] = raw_transaction_str[offset:offset+2*arbitrary_length]
             prepare_coinbase_input_id_hexstr += tx_input['arbitrary']
             offset = offset + 2 * arbitrary_length
             tx_input['input_id'] = get_coinbase_input_id(prepare_coinbase_input_id_hexstr)
             offset = offset + 2
             tx['inputs'].append(tx_input)
             prepare_mux_hexstr += tx_input['input_id'] + 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
-    tx_output_amount, length = get_uvarint(raw_tx_str[offset:offset+18])
+    tx_output_amount, length = get_uvarint(raw_transaction_str[offset:offset+18])
     offset = offset + 2 * length
     prepare_tx_id_hexstr += (tx_output_amount).to_bytes((tx_output_amount.bit_length() + 7) // 8, 'little').hex()
     for i in range(tx_output_amount):
@@ -333,27 +337,27 @@ def decode_raw_tx(raw_tx_str, network_str):
             "type": ""
         }
         tx_output['position'] = i
-        _, length = get_uvarint(raw_tx_str[offset:offset+18])
+        _, length = get_uvarint(raw_transaction_str[offset:offset+18])
         offset = offset + 2 * length
-        _, length = get_uvarint(raw_tx_str[offset:offset+18])
+        _, length = get_uvarint(raw_transaction_str[offset:offset+18])
         offset = offset + 2 * length
-        tx_output['asset_id'] = raw_tx_str[offset:offset+64]
+        tx_output['asset_id'] = raw_transaction_str[offset:offset+64]
         offset = offset + 64
-        tx_output['amount'], length = get_uvarint(raw_tx_str[offset:offset+18])
+        tx_output['amount'], length = get_uvarint(raw_transaction_str[offset:offset+18])
         if tx_input['type'] == "coinbase":
             prepare_mux_hexstr = prepare_mux_hexstr + (tx_output['amount']).to_bytes(8, byteorder='little').hex() + '0000000000000000' + '0100000000000000' + '0151'
             mux_id_hexstr = get_mux_id(prepare_mux_hexstr)
         offset = offset + 2 * length
         if tx_output['asset_id'] == 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff':
             tx['fee'] -= tx_output['amount']
-        _, length = get_uvarint(raw_tx_str[offset:offset+18])
+        _, length = get_uvarint(raw_transaction_str[offset:offset+18])
         offset = offset + 2 * length
-        control_program_length, length = get_uvarint(raw_tx_str[offset:offset+18])
+        control_program_length, length = get_uvarint(raw_transaction_str[offset:offset+18])
         offset = offset + 2 * length
-        tx_output['control_program'] = raw_tx_str[offset:offset+2*control_program_length]
+        tx_output['control_program'] = raw_transaction_str[offset:offset+2*control_program_length]
         offset = offset + 2 * control_program_length
         tx_output['address'] = receiver.create_address(tx_output['control_program'], network_str)['address']
-        _, length = get_uvarint(raw_tx_str[offset:offset+18])
+        _, length = get_uvarint(raw_transaction_str[offset:offset+18])
         offset = offset + 2 * length
         prepare_output_id_hexstr = mux_id_hexstr + tx_output['asset_id'] + (tx_output['amount']).to_bytes(8, byteorder='little').hex() + (i).to_bytes(8, byteorder='little').hex() + '0100000000000000' + (control_program_length).to_bytes((control_program_length.bit_length() + 7) // 8, 'little').hex() + tx_output['control_program']
         tx_output['id'] = get_output_id(prepare_output_id_hexstr)
