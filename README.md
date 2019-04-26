@@ -52,7 +52,7 @@ Bytom Kit is a simple tool which can help developer to understand Bytom easily. 
 - get_testnet_coins
 - get_gm_testnet_coins
 
-You post url: https://kit.blockmeta.com/api/v1/<api>.
+You post url: https://kit.blockmeta.com/api/v1/api.
 
 For example, create new entropy: https://kit.blockmeta.com/api/v1/create_entropy.
 
