@@ -29,7 +29,7 @@ idna==2.8
 image==1.5.27
 isort==4.3.4
 itsdangerous==1.1.0
-Jinja2==2.10
+Jinja2==2.11.3
 jsonschema==2.6.0
 keychain==0.14.2.0
 keylib==0.1.1
