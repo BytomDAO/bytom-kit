@@ -41,7 +41,7 @@ pbkdf2==1.3
 Pillow==5.4.1
 pkginfo==1.5.0.1
 pluggy==0.8.0
-py==1.7.0
+py==1.10.0
 pybase64==0.5.0
 pybitcoin==0.9.9
 pybtm==0.1.2
